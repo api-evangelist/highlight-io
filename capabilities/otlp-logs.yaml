@@ -1,0 +1,80 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Highlight OTLP Logs API — Logs
+  description: 'Highlight OTLP Logs API — Logs. 1 operation. Lead operation: Export Logs Service. Self-contained
+    Naftiko capability that submits OpenTelemetry log batches to Highlight.'
+  tags:
+  - Highlight
+  - OpenTelemetry
+  - Logs
+  - Observability
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    HIGHLIGHT_PROJECT_ID: HIGHLIGHT_PROJECT_ID
+    HIGHLIGHT_OTLP_ENDPOINT: HIGHLIGHT_OTLP_ENDPOINT
+capability:
+  consumes:
+  - type: http
+    namespace: otlp-logs
+    baseUri: '{{env.HIGHLIGHT_OTLP_ENDPOINT}}'
+    description: Highlight OTLP Logs ingestion.
+    resources:
+    - name: v1-logs
+      path: /v1/logs
+      operations:
+      - name: exportLogs
+        method: POST
+        description: Export OpenTelemetry log batch to Highlight.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: ExportLogsServiceRequest payload (resourceLogs).
+          required: true
+    authentication:
+      type: none
+  exposes:
+  - type: rest
+    namespace: otlp-logs-rest
+    port: 8080
+    description: REST adapter for Highlight OTLP Logs ingestion.
+    resources:
+    - path: /v1/v1/logs
+      name: v1-logs
+      description: REST surface for OTLP log export.
+      operations:
+      - method: POST
+        name: exportLogs
+        description: Export OpenTelemetry log batch to Highlight.
+        call: otlp-logs.exportLogs
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: otlp-logs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Highlight OTLP Logs ingestion.
+    tools:
+    - name: highlight-export-logs
+      description: Export OpenTelemetry log batch to Highlight.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: otlp-logs.exportLogs
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

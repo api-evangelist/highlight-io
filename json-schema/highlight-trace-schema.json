@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/highlight-io/highlight-trace-schema.json",
+  "title": "Highlight Trace (OTLP)",
+  "description": "Schema for an OpenTelemetry trace export request as accepted by the Highlight OTLP HTTP/JSON endpoint at /v1/traces.",
+  "type": "object",
+  "required": ["resourceSpans"],
+  "properties": {
+    "resourceSpans": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ResourceSpans" }
+    }
+  },
+  "definitions": {
+    "ResourceSpans": {
+      "type": "object",
+      "properties": {
+        "resource": { "$ref": "#/definitions/Resource" },
+        "scopeSpans": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ScopeSpans" }
+        },
+        "schemaUrl": { "type": "string" }
+      }
+    },
+    "Resource": {
+      "type": "object",
+      "description": "Resource MUST include the highlight.project_id attribute.",
+      "properties": {
+        "attributes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/KeyValue" }
+        }
+      }
+    },
+    "ScopeSpans": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "spans": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Span" }
+        }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "required": ["traceId", "spanId", "name", "startTimeUnixNano", "endTimeUnixNano"],
+      "properties": {
+        "traceId": { "type": "string", "description": "16-byte hex trace identifier." },
+        "spanId": { "type": "string", "description": "8-byte hex span identifier." },
+        "parentSpanId": { "type": "string" },
+        "name": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SPAN_KIND_UNSPECIFIED",
+            "SPAN_KIND_INTERNAL",
+            "SPAN_KIND_SERVER",
+            "SPAN_KIND_CLIENT",
+            "SPAN_KIND_PRODUCER",
+            "SPAN_KIND_CONSUMER"
+          ]
+        },
+        "startTimeUnixNano": { "type": "string" },
+        "endTimeUnixNano": { "type": "string" },
+        "attributes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/KeyValue" }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": ["STATUS_CODE_UNSET", "STATUS_CODE_OK", "STATUS_CODE_ERROR"]
+            },
+            "message": { "type": "string" }
+          }
+        }
+      }
+    },
+    "KeyValue": {
+      "type": "object",
+      "required": ["key"],
+      "properties": {
+        "key": { "type": "string" },
+        "value": {
+          "type": "object",
+          "properties": {
+            "stringValue": { "type": "string" },
+            "boolValue": { "type": "boolean" },
+            "intValue": { "type": "string" },
+            "doubleValue": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

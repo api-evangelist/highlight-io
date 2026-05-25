@@ -1,0 +1,132 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Highlight
+providerId: highlight-io
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - FinOps
+  - Cost Management
+  - FOCUS
+  - Observability
+description: FOCUS-aligned FinOps definition for the highlight.io hosted offering. Usage is metered in sessions,
+  errors, log records, spans, and dashboard count, with per-unit overages above plan inclusions.
+sources:
+  - https://www.highlight.io/pricing
+  - https://www.highlight.io/docs/general/company/general/billing
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Highlight
+serviceCategory: Observability
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+    - Subscription
+    - Usage
+    - Tax
+    - Credit
+    - Adjustment
+  primaryUnit: session
+  secondaryUnits:
+    - error
+    - log_record
+    - span
+    - dashboard
+    - seat
+focusColumns:
+  ServiceName: Highlight Hosted Platform
+  ServiceCategory: Observability
+  ProviderName: Highlight Inc.
+  PublisherName: Highlight Inc.
+  InvoiceIssuerName: Highlight Inc.
+  PricingCategory: Usage-Based
+  PricingUnit: session
+  BillingCurrency: USD
+meters:
+  - name: sessions
+    unit: session
+    aggregation: sum
+    dimensions:
+      - project
+      - environment
+  - name: errors
+    unit: error
+    aggregation: sum
+    dimensions:
+      - project
+      - environment
+      - error_group
+  - name: log_records
+    unit: log_record
+    aggregation: sum
+    dimensions:
+      - project
+      - service_name
+      - severity
+  - name: spans
+    unit: span
+    aggregation: sum
+    dimensions:
+      - project
+      - service_name
+  - name: dashboards
+    unit: dashboard
+    aggregation: count
+    dimensions:
+      - workspace
+  - name: seats
+    unit: user
+    aggregation: count
+    dimensions:
+      - workspace
+chargeMappings:
+  - planId: highlight-pay-as-you-go
+    chargeCategory: Subscription
+    chargeDescription: Pay-as-you-go base subscription
+    pricingUnit: month
+    price: 50.00
+  - planId: highlight-business
+    chargeCategory: Subscription
+    chargeDescription: Business plan base subscription
+    pricingUnit: month
+    price: 800.00
+  - planId: highlight-pay-as-you-go
+    chargeCategory: Usage
+    chargeDescription: Per-session overage above plan inclusion
+    pricingUnit: session
+  - planId: highlight-pay-as-you-go
+    chargeCategory: Usage
+    chargeDescription: Per-error overage above plan inclusion
+    pricingUnit: error
+  - planId: highlight-pay-as-you-go
+    chargeCategory: Usage
+    chargeDescription: Per-1M log record overage above plan inclusion
+    pricingUnit: 1000000 log_records
+  - planId: highlight-pay-as-you-go
+    chargeCategory: Usage
+    chargeDescription: Per-1M span overage above plan inclusion
+    pricingUnit: 1000000 spans
+retention:
+  - tier: Pay-as-you-go
+    sessions: 90 days
+    errors: 90 days
+    logs: 30 days
+    traces: 30 days
+  - tier: Business
+    sessions: custom
+    errors: custom
+    logs: custom
+    traces: custom
+  - tier: Enterprise
+    sessions: contract
+    errors: contract
+    logs: contract
+    traces: contract

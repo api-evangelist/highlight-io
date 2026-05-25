@@ -1,0 +1,251 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Highlight
+providerId: highlight-io
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - Observability
+  - Session Replay
+  - APM
+description: 'Reconciled plans and quotas for highlight.io''s hosted SaaS offering. Source: highlight.io/pricing.
+  Self-hosted Hobby and Enterprise deployments are licensed separately and not represented in entries here.'
+sources:
+  - https://www.highlight.io/pricing
+  - https://www.highlight.io/docs/general/company/open-source/hosted-vs-self-hosted
+plans:
+  - id: highlight-free
+    name: Free
+    type: free
+    description: For exploring the product. 500 sessions per month, AI error grouping, up to 15 seats.
+    entries:
+      - label: Monthly sessions
+        name: sessions
+        type: included
+        metric: sessions
+        limit: 500
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Workspace seats
+        name: seats
+        type: included
+        metric: users
+        limit: 15
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+    elements:
+      - name: AI error grouping
+      - name: Session replay
+      - name: Error monitoring
+      - name: Up to 15 seats
+  - id: highlight-pay-as-you-go
+    name: Pay-as-you-go
+    type: usage-based
+    description: $50/month base. Bring-your-own-volume across sessions, errors, logs, and traces with per-unit
+      overages.
+    entries:
+      - label: Base subscription
+        name: base
+        type: recurring
+        metric: subscription
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '50.00'
+        userMultiplied: false
+      - label: Included sessions
+        name: included_sessions
+        type: included
+        metric: sessions
+        limit: 500
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Included errors
+        name: included_errors
+        type: included
+        metric: errors
+        limit: 1000
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Included logs
+        name: included_logs
+        type: included
+        metric: log_records
+        limit: 1000000
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Included traces
+        name: included_traces
+        type: included
+        metric: spans
+        limit: 25000000
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Workspace seats
+        name: seats
+        type: included
+        metric: users
+        limit: 15
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Projects
+        name: projects
+        type: included
+        metric: projects
+        limit: 2
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Dashboards
+        name: dashboards
+        type: included
+        metric: dashboards
+        limit: 3
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+    elements:
+      - name: 3 month retention (sessions, errors)
+      - name: 30 day retention (logs, traces)
+      - name: Per-unit overages for sessions, errors, logs, traces
+      - name: All integrations
+  - id: highlight-business
+    name: Business
+    type: subscription
+    description: $800/month. Unlimited dashboards, projects, and seats. Data ingest filters and custom retention.
+    entries:
+      - label: Base subscription
+        name: base
+        type: recurring
+        metric: subscription
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '800.00'
+        userMultiplied: false
+      - label: Workspace seats
+        name: seats
+        type: included
+        metric: users
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Projects
+        name: projects
+        type: included
+        metric: projects
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+      - label: Dashboards
+        name: dashboards
+        type: included
+        metric: dashboards
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+    elements:
+      - name: Unlimited dashboards, projects, seats
+      - name: Data ingest filters
+      - name: Custom retention policies
+      - name: All Pay-as-you-go features
+  - id: highlight-enterprise
+    name: Enterprise
+    type: contract
+    description: Contact sales. Adds SAML/SSO, RBAC and audit logs, custom MSAs/SLAs, data export, and user reporting.
+    entries:
+      - label: Contract
+        name: contract
+        type: contract
+        metric: contract
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'contact'
+        userMultiplied: false
+    elements:
+      - name: SAML and SSO
+      - name: RBAC and audit logs
+      - name: Custom MSAs and SLAs
+      - name: Data export and user reporting
+      - name: All Business plan features
+  - id: highlight-self-hosted-hobby
+    name: Self-Hosted Hobby
+    type: open-source
+    description: Single-host Docker deployment of the open-source stack. Free under Apache 2.0; user supplies
+      infrastructure.
+    entries:
+      - label: Software license
+        name: license
+        type: included
+        metric: license
+        limit: 1
+        timeFrame: perpetual
+        geo: global
+        unit: 1
+        price: '0'
+        userMultiplied: false
+    elements:
+      - name: Apache 2.0 (with separate license for highlight.io/ and enterprise/ paths)
+      - name: Single-host Docker
+      - name: Community support
+  - id: highlight-self-hosted-enterprise
+    name: Self-Hosted Enterprise
+    type: contract
+    description: Kubernetes-based self-hosted deployment with horizontal scaling, ClickHouse cluster, and managed
+      retention. Commercial license; contact sales.
+    entries:
+      - label: Contract
+        name: contract
+        type: contract
+        metric: contract
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'contact'
+        userMultiplied: false
+    elements:
+      - name: Kubernetes deployment
+      - name: ClickHouse cluster
+      - name: Commercial support
+      - name: All hosted Enterprise features

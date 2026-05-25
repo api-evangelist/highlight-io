@@ -1,0 +1,118 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://schema.org/",
+    "highlight": "https://highlight.io/vocab#",
+    "otel": "https://opentelemetry.io/vocab#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+
+    "Project": {
+      "@id": "highlight:Project",
+      "@context": {
+        "id": { "@id": "highlight:Project/id", "@type": "xsd:string" },
+        "verboseId": { "@id": "highlight:Project/verboseId", "@type": "xsd:string" },
+        "name": { "@id": "schema:name", "@type": "xsd:string" },
+        "workspace": { "@id": "highlight:Project/workspace", "@type": "highlight:Workspace" }
+      }
+    },
+
+    "Workspace": {
+      "@id": "highlight:Workspace",
+      "@context": {
+        "id": { "@id": "highlight:Workspace/id", "@type": "xsd:string" },
+        "name": { "@id": "schema:name", "@type": "xsd:string" },
+        "plan": { "@id": "highlight:Workspace/plan", "@type": "xsd:string" }
+      }
+    },
+
+    "Session": {
+      "@id": "highlight:Session",
+      "@context": {
+        "id": { "@id": "highlight:Session/id", "@type": "xsd:string" },
+        "secureId": { "@id": "highlight:Session/secureId", "@type": "xsd:string" },
+        "projectId": { "@id": "highlight:Session/projectId", "@type": "xsd:string" },
+        "identifier": { "@id": "highlight:Session/identifier", "@type": "xsd:string" },
+        "fingerprint": { "@id": "highlight:Session/fingerprint", "@type": "xsd:string" },
+        "userAgent": { "@id": "highlight:Session/userAgent", "@type": "xsd:string" },
+        "appVersion": { "@id": "highlight:Session/appVersion", "@type": "xsd:string" },
+        "environment": { "@id": "highlight:Session/environment", "@type": "xsd:string" },
+        "city": { "@id": "schema:addressLocality", "@type": "xsd:string" },
+        "country": { "@id": "schema:addressCountry", "@type": "xsd:string" },
+        "startedAt": { "@id": "dcterms:created", "@type": "xsd:dateTime" },
+        "lastActiveAt": { "@id": "highlight:Session/lastActiveAt", "@type": "xsd:dateTime" },
+        "activeLength": { "@id": "highlight:Session/activeLength", "@type": "xsd:duration" },
+        "url": { "@id": "schema:url", "@type": "@id" }
+      }
+    },
+
+    "ErrorGroup": {
+      "@id": "highlight:ErrorGroup",
+      "@context": {
+        "id": { "@id": "highlight:ErrorGroup/id", "@type": "xsd:string" },
+        "secureId": { "@id": "highlight:ErrorGroup/secureId", "@type": "xsd:string" },
+        "title": { "@id": "schema:name", "@type": "xsd:string" },
+        "event": { "@id": "highlight:ErrorGroup/event", "@type": "xsd:string" },
+        "type": { "@id": "highlight:ErrorGroup/type", "@type": "xsd:string" },
+        "environment": { "@id": "highlight:ErrorGroup/environment", "@type": "xsd:string" },
+        "stackTrace": { "@id": "highlight:ErrorGroup/stackTrace", "@type": "xsd:string" },
+        "state": { "@id": "highlight:ErrorGroup/state", "@type": "xsd:string" },
+        "firstOccurrence": { "@id": "highlight:ErrorGroup/firstOccurrence", "@type": "xsd:dateTime" },
+        "lastOccurrence": { "@id": "highlight:ErrorGroup/lastOccurrence", "@type": "xsd:dateTime" }
+      }
+    },
+
+    "LogRecord": {
+      "@id": "highlight:LogRecord",
+      "@context": {
+        "timestamp": { "@id": "highlight:LogRecord/timestamp", "@type": "xsd:dateTime" },
+        "severityText": { "@id": "highlight:LogRecord/severityText", "@type": "xsd:string" },
+        "severityNumber": { "@id": "highlight:LogRecord/severityNumber", "@type": "xsd:integer" },
+        "body": { "@id": "schema:text", "@type": "xsd:string" },
+        "serviceName": { "@id": "highlight:LogRecord/serviceName", "@type": "xsd:string" },
+        "traceId": { "@id": "otel:traceId", "@type": "xsd:string" },
+        "spanId": { "@id": "otel:spanId", "@type": "xsd:string" },
+        "sessionId": { "@id": "highlight:LogRecord/sessionId", "@type": "xsd:string" },
+        "attributes": { "@id": "highlight:LogRecord/attributes", "@container": "@index" }
+      }
+    },
+
+    "Span": {
+      "@id": "highlight:Span",
+      "@context": {
+        "traceId": { "@id": "otel:traceId", "@type": "xsd:string" },
+        "spanId": { "@id": "otel:spanId", "@type": "xsd:string" },
+        "parentSpanId": { "@id": "otel:parentSpanId", "@type": "xsd:string" },
+        "name": { "@id": "schema:name", "@type": "xsd:string" },
+        "kind": { "@id": "highlight:Span/kind", "@type": "xsd:string" },
+        "startTimeUnixNano": { "@id": "highlight:Span/startTimeUnixNano", "@type": "xsd:long" },
+        "endTimeUnixNano": { "@id": "highlight:Span/endTimeUnixNano", "@type": "xsd:long" },
+        "sessionId": { "@id": "highlight:Span/sessionId", "@type": "xsd:string" },
+        "attributes": { "@id": "highlight:Span/attributes", "@container": "@index" }
+      }
+    },
+
+    "Alert": {
+      "@id": "highlight:Alert",
+      "@context": {
+        "id": { "@id": "highlight:Alert/id", "@type": "xsd:string" },
+        "name": { "@id": "schema:name", "@type": "xsd:string" },
+        "type": { "@id": "highlight:Alert/type", "@type": "xsd:string" },
+        "threshold": { "@id": "highlight:Alert/threshold", "@type": "xsd:integer" },
+        "frequency": { "@id": "highlight:Alert/frequency", "@type": "xsd:duration" },
+        "destinations": { "@id": "highlight:Alert/destinations", "@container": "@list" }
+      }
+    },
+
+    "Dashboard": {
+      "@id": "highlight:Dashboard",
+      "@context": {
+        "id": { "@id": "highlight:Dashboard/id", "@type": "xsd:string" },
+        "name": { "@id": "schema:name", "@type": "xsd:string" },
+        "projectId": { "@id": "highlight:Dashboard/projectId", "@type": "xsd:string" },
+        "metrics": { "@id": "highlight:Dashboard/metrics", "@container": "@list" }
+      }
+    }
+  }
+}

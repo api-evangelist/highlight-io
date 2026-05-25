@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/highlight-io/highlight-log-schema.json",
+  "title": "Highlight Log Record (OTLP)",
+  "description": "Schema for a single OpenTelemetry log record as accepted by the Highlight OTLP HTTP/JSON endpoint at /v1/logs.",
+  "type": "object",
+  "required": ["timeUnixNano", "body"],
+  "properties": {
+    "timeUnixNano": { "type": "string", "description": "Event timestamp in nanoseconds since UNIX epoch." },
+    "observedTimeUnixNano": { "type": "string" },
+    "severityNumber": {
+      "type": "integer",
+      "description": "OpenTelemetry severity number (1-24). 9=INFO, 13=WARN, 17=ERROR, 21=FATAL.",
+      "minimum": 1,
+      "maximum": 24
+    },
+    "severityText": {
+      "type": "string",
+      "description": "Human-readable severity label.",
+      "examples": ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"]
+    },
+    "body": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "stringValue": { "type": "string" },
+            "intValue": { "type": "string" },
+            "doubleValue": { "type": "number" },
+            "boolValue": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Recommended attributes: highlight.session_id, highlight.trace_id, service.name.",
+      "items": {
+        "type": "object",
+        "required": ["key"],
+        "properties": {
+          "key": { "type": "string" },
+          "value": {
+            "type": "object",
+            "properties": {
+              "stringValue": { "type": "string" },
+              "boolValue": { "type": "boolean" },
+              "intValue": { "type": "string" },
+              "doubleValue": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "traceId": { "type": "string", "description": "16-byte hex trace ID for correlation." },
+    "spanId": { "type": "string", "description": "8-byte hex span ID for correlation." }
+  }
+}

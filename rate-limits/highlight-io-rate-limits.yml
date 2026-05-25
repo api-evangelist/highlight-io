@@ -1,0 +1,62 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Highlight
+providerId: highlight-io
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - Observability
+  - Rate Limiting
+  - Ingestion
+description: Reconciled ingestion limits for the Highlight hosted offering. Limits apply at the project level on
+  the public ingestion endpoint (`pub.highlight.io`) and the OTLP endpoints (`otel.highlight.io`). Self-hosted
+  deployments may configure their own limits in the OpenTelemetry Collector and Kafka tiers.
+sources:
+  - https://www.highlight.io/pricing
+  - https://www.highlight.io/docs/general/product-features/general-features/api
+  - https://github.com/highlight/highlight/tree/main/backend
+headers:
+  retryAfter: retry-after
+responseCodes:
+  throttled: 429
+  payloadTooLarge: 413
+algorithm: token-bucket-per-project
+notes:
+  - Hosted ingestion enforces a per-project request budget that scales with the active plan. Pay-as-you-go and
+    above advance automatically as usage grows; Free is capped at 500 sessions/month.
+  - The session ingestion endpoint enforces a maximum payload size of 32 MB per `pushPayload` mutation; oversized
+    payloads return HTTP 413 and the SDK transparently chunks rrweb event streams to stay below it.
+  - OTLP endpoints follow the OpenTelemetry Collector default of 4 MB per request batch.
+limits:
+  - tier: Free
+    endpoint: pub.highlight.io
+    sessions_per_month: 500
+    payload_max_mb: 32
+    notes: Hard cap; further sessions are dropped after the 500 monthly limit.
+  - tier: Pay-as-you-go
+    endpoint: pub.highlight.io
+    sessions_per_month: 500
+    overage: per-unit pricing applies beyond 500 sessions
+    payload_max_mb: 32
+  - tier: Business
+    endpoint: pub.highlight.io
+    sessions_per_month: 'metered'
+    payload_max_mb: 32
+    notes: No request-count throttle; usage billed via overages.
+  - tier: Enterprise
+    endpoint: pub.highlight.io
+    sessions_per_month: 'metered'
+    payload_max_mb: custom
+    notes: Custom limits negotiated in contract.
+  - tier: All
+    endpoint: otel.highlight.io/v1/traces
+    batch_max_mb: 4
+    notes: Standard OTLP batch limit; collector returns 413 on oversize.
+  - tier: All
+    endpoint: otel.highlight.io/v1/logs
+    batch_max_mb: 4
+  - tier: All
+    endpoint: otel.highlight.io/v1/metrics
+    batch_max_mb: 4

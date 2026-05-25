@@ -1,0 +1,202 @@
+openapi: 3.1.0
+info:
+  title: Highlight OTLP Metrics API
+  description: >
+    Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics.
+    Accepts standard `ExportMetricsServiceRequest` payloads including gauges,
+    sums, histograms, and exponential histograms. Metrics drive Highlight
+    dashboards, monitors, and the metrics SQL editor.
+  version: '1.0-beta'
+  contact:
+    name: Highlight Support
+    url: https://www.highlight.io/community
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://otel.highlight.io
+    description: Highlight hosted OTLP collector
+  - url: http://localhost:4318
+    description: Self-hosted OTLP collector
+tags:
+  - name: Metrics
+    description: OpenTelemetry metric ingestion (beta)
+paths:
+  /v1/metrics:
+    post:
+      summary: Export Metrics Service
+      description: >
+        Submit a batch of OpenTelemetry metric data points. Resource attribute
+        `highlight.project_id` is required.
+      operationId: exportMetrics
+      tags:
+        - Metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportMetricsServiceRequest'
+          application/x-protobuf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Metrics accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportMetricsServiceResponse'
+        '400':
+          description: Malformed payload or missing `highlight.project_id`.
+        '429':
+          description: Rate limited.
+components:
+  schemas:
+    ExportMetricsServiceRequest:
+      type: object
+      required:
+        - resourceMetrics
+      properties:
+        resourceMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceMetrics'
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    ScopeMetrics:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    Metric:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        unit:
+          type: string
+        gauge:
+          type: object
+          properties:
+            dataPoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/NumberDataPoint'
+        sum:
+          type: object
+          properties:
+            dataPoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/NumberDataPoint'
+            aggregationTemporality:
+              type: integer
+            isMonotonic:
+              type: boolean
+        histogram:
+          type: object
+          properties:
+            dataPoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/HistogramDataPoint'
+            aggregationTemporality:
+              type: integer
+    NumberDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
+    HistogramDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        count:
+          type: string
+        sum:
+          type: number
+        bucketCounts:
+          type: array
+          items:
+            type: string
+        explicitBounds:
+          type: array
+          items:
+            type: number
+    KeyValue:
+      type: object
+      required: [key, value]
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string

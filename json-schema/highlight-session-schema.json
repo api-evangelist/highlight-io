@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/highlight-io/highlight-session-schema.json",
+  "title": "Highlight Session",
+  "description": "Schema for a Highlight session as represented in the dashboard and emitted by SDK identify/initialize mutations.",
+  "type": "object",
+  "required": ["secure_id", "project_id"],
+  "properties": {
+    "id": { "type": ["integer", "string"], "description": "Numeric session identifier." },
+    "secure_id": { "type": "string", "description": "URL-safe secure session identifier used in dashboard links." },
+    "project_id": { "type": "string", "description": "Owning Highlight project (verbose) identifier." },
+    "identifier": { "type": "string", "description": "Customer-supplied identifier passed to H.identify (e.g. user email)." },
+    "fingerprint": { "type": "string" },
+    "user_object": {
+      "type": "object",
+      "description": "Arbitrary user metadata supplied via H.identify second argument.",
+      "additionalProperties": true
+    },
+    "fields": {
+      "type": "array",
+      "description": "Session properties added via H.addSessionProperties.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "string" },
+          "type": { "type": "string", "enum": ["session", "user", "track"] }
+        }
+      }
+    },
+    "environment": { "type": "string", "description": "Deployment environment (e.g. production, staging)." },
+    "app_version": { "type": "string" },
+    "client_version": { "type": "string" },
+    "firstload_version": { "type": "string" },
+    "client_id": { "type": "string" },
+    "user_agent": { "type": "string" },
+    "city": { "type": "string" },
+    "country": { "type": "string" },
+    "language": { "type": "string" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "last_active_at": { "type": "string", "format": "date-time" },
+    "active_length": { "type": "integer", "description": "Active duration in milliseconds." },
+    "url": { "type": "string", "format": "uri", "description": "Direct link to the session in the Highlight dashboard." },
+    "events_count": { "type": "integer" },
+    "messages_count": { "type": "integer" },
+    "errors_count": { "type": "integer" },
+    "viewed": { "type": "boolean" },
+    "starred": { "type": "boolean" },
+    "excluded": { "type": "boolean" },
+    "processed": { "type": "boolean" },
+    "enable_strict_privacy": { "type": "boolean" }
+  }
+}

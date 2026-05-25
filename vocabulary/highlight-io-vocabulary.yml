@@ -1,0 +1,170 @@
+vocabulary: API Evangelist Provider Vocabulary
+version: '0.1'
+provider: Highlight
+providerId: highlight-io
+created: '2026-05-25'
+modified: '2026-05-25'
+description: Vocabulary mapping the operational and capability dimensions of Highlight's open-source full-stack
+  monitoring platform. Cross-references OpenTelemetry concepts, rrweb concepts, and Highlight-specific entities.
+sources:
+  - https://www.highlight.io/docs
+  - https://opentelemetry.io/docs/concepts/
+  - https://github.com/highlight/highlight
+
+concepts:
+  - id: session
+    label: Session
+    description: A single user visit to an application instrumented with the highlight.run SDK. Captures DOM
+      snapshots, console messages, network requests, errors, and custom events.
+    aliases: [SessionReplay, UserSession]
+    relatedTo: [Project, ErrorGroup, LogRecord, Span]
+  - id: project
+    label: Project
+    description: A unit of organization in Highlight that groups data from a single application or service. Has
+      a verbose (URL-safe) ID and a numeric ID. Lives inside a Workspace.
+    aliases: [App, Application]
+    relatedTo: [Workspace, Session, ErrorGroup]
+  - id: workspace
+    label: Workspace
+    description: The billing and access-control boundary in Highlight. Contains one or more projects and a roster
+      of members.
+    aliases: [Organization, Team]
+  - id: error-group
+    label: Error Group
+    description: A deduplicated cluster of frontend or backend exceptions, grouped by stack-trace fingerprint and
+    enriched with affected-user counts, environments, and resolved/ignored/snoozed state.
+    aliases: [Issue, Bug]
+  - id: log-record
+    label: Log Record
+    description: A structured log entry ingested via OTLP. Carries severity, body, attributes, optional
+      trace/span correlation, and optional highlight.session_id for browser correlation.
+  - id: span
+    label: Span
+    description: A unit of work in distributed tracing. Has start/end timestamps, parent/child relationships,
+      attributes, events, and links. Highlight ingests spans via OTLP HTTP at /v1/traces.
+  - id: trace
+    label: Trace
+    description: A tree of related spans representing one logical request. Identified by a 16-byte trace ID.
+  - id: metric
+    label: Metric
+    description: Time-series data ingested via OTLP HTTP at /v1/metrics (beta). Highlight supports gauges, sums,
+      and histograms.
+  - id: alert
+    label: Alert
+    description: A subscription on errors, sessions, users, logs, traces, or metric monitors that fires
+      notifications to Slack, Discord, Teams, PagerDuty, or webhook destinations.
+  - id: dashboard
+    label: Dashboard
+    description: A user-curated grid of metric, log, trace, and session visualizations. Pay-as-you-go limits to 3
+      per workspace; Business and Enterprise are unlimited.
+  - id: monitor
+    label: Metric Monitor
+    description: A continuously evaluated threshold check on a metric or log query that drives Alert
+      notifications.
+
+services:
+  - id: session-replay
+    label: Session Replay
+    description: rrweb-based session recording with canvas, iframe, console, and network capture. Supports
+      privacy settings (strict, default, none).
+  - id: error-monitoring
+    label: Error Monitoring
+    description: Captures, deduplicates, and visualizes frontend and backend exceptions. Sourcemap support;
+      GitHub issue creation; user-affected counts.
+  - id: logging
+    label: Logging
+    description: Full-text log search across high-cardinality columnar storage. Sub-second queries via
+      ClickHouse.
+  - id: tracing
+    label: Distributed Tracing
+    description: OpenTelemetry-native distributed tracing with waterfall visualization and correlation to the
+      originating session replay.
+  - id: metrics
+    label: Metrics (beta)
+    description: OTLP metrics ingestion driving dashboards and monitors.
+  - id: dashboards
+    label: Dashboards
+    description: SQL-editor-backed visualizations combining metrics, logs, traces, and sessions.
+
+tools:
+  - id: highlight-run
+    label: highlight.run
+    description: The official browser SDK. ESM/UMD bundle distributed via npm and unpkg.
+  - id: highlight-node
+    label: '@highlight-run/node'
+    description: Node.js server SDK with framework-specific submodules for Express, Next.js, NestJS, AWS Lambda,
+      Cloudflare Workers, Hono, tRPC.
+  - id: highlight-python
+    label: highlight-io
+    description: Python server SDK with framework-specific submodules for Django, FastAPI, Flask, AWS Lambda,
+      Azure Functions, GCF, Loguru.
+  - id: highlight-go
+    label: highlight-go
+    description: Go server SDK with submodules for Chi, Echo, Fiber, Gin, GORM, gqlgen, Logrus, gorilla/mux.
+  - id: highlight-ruby
+    label: highlight_io
+    description: Ruby server SDK for Rails and other frameworks.
+  - id: highlight-rust
+    label: highlight-rust
+    description: Rust server SDK with actix-web support.
+  - id: highlight-elixir
+    label: highlight-elixir
+    description: Elixir server SDK.
+  - id: highlight-java
+    label: highlight-java
+    description: Java server SDK.
+  - id: highlight-php
+    label: highlight-php
+    description: PHP server SDK.
+  - id: highlight-dotnet
+    label: highlight-dotnet
+    description: C#/.NET server SDK.
+
+standards:
+  - id: opentelemetry
+    label: OpenTelemetry
+    description: Highlight ingests traces, logs, and metrics natively via the OTLP HTTP/JSON and HTTP/Protobuf
+      transports. Implements the OpenTelemetry collector pipeline server-side.
+  - id: rrweb
+    label: rrweb
+    description: DOM-recording library underlying Highlight's session replay; Highlight maintains a fork to add
+      cross-origin iframe support and performance optimizations.
+  - id: apache-2-0
+    label: Apache License 2.0
+    description: The base license for the highlight monorepo. The highlight.io/ documentation site and
+      enterprise/ directory carry separate licenses.
+  - id: soc-2
+    label: SOC 2 Type II
+    description: Hosted Highlight is SOC 2 Type II attested.
+  - id: hipaa
+    label: HIPAA
+    description: HIPAA-compliant tier available for Business and Enterprise customers.
+  - id: iso-27001
+    label: ISO 27001
+    description: ISO 27001 attestation available for the hosted offering.
+
+integrations:
+  - Slack
+  - Discord
+  - Microsoft Teams
+  - PagerDuty
+  - GitHub
+  - GitLab
+  - Bitbucket
+  - Jira
+  - Linear
+  - ClickUp
+  - Vercel
+  - LaunchDarkly
+  - Grafana
+  - Amplitude
+  - Mixpanel
+  - Segment
+  - Sentry (import)
+  - Front
+  - Intercom
+  - Zapier
+  - Cloudflare
+  - AWS
+  - Fly.io
+  - Heroku

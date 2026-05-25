@@ -1,0 +1,84 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Highlight Private GraphQL API — Management
+  description: 'Highlight Private GraphQL API — Management. 1 operation. Lead operation: Execute Private Graph Query.
+    Self-contained Naftiko capability that queries and mutates the Highlight dashboard backend (workspaces, projects,
+    sessions, errors, logs, traces, alerts) via the internal GraphQL surface at pri.highlight.io.'
+  tags:
+  - Highlight
+  - GraphQL
+  - Management
+  - Internal
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    HIGHLIGHT_PRIVATE_ENDPOINT: HIGHLIGHT_PRIVATE_ENDPOINT
+    HIGHLIGHT_API_TOKEN: HIGHLIGHT_API_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: private-graphql
+    baseUri: '{{env.HIGHLIGHT_PRIVATE_ENDPOINT}}'
+    description: Highlight private-graph dashboard backend.
+    resources:
+    - name: root
+      path: /
+      operations:
+      - name: executePrivateGraphQuery
+        method: POST
+        description: Execute a Highlight private-graph query or mutation.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: GraphQL request envelope with operationName, query, and variables.
+          required: true
+    authentication:
+      type: bearer
+      key: Authorization
+      value: 'Bearer {{env.HIGHLIGHT_API_TOKEN}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: private-graphql-rest
+    port: 8080
+    description: REST adapter for Highlight private GraphQL.
+    resources:
+    - path: /v1/private
+      name: root
+      description: REST surface for private-graph queries.
+      operations:
+      - method: POST
+        name: executePrivateGraphQuery
+        description: Execute a Highlight private-graph query or mutation.
+        call: private-graphql.executePrivateGraphQuery
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: private-graphql-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Highlight private GraphQL.
+    tools:
+    - name: highlight-private-graph
+      description: Execute a Highlight private-graph query or mutation.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: private-graphql.executePrivateGraphQuery
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

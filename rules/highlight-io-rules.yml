@@ -1,0 +1,127 @@
+extends:
+  - spectral:oas
+
+rules:
+  highlight-info-title-required:
+    description: All Highlight OpenAPI specs MUST include info.title.
+    given: $.info
+    severity: error
+    then:
+      field: title
+      function: truthy
+
+  highlight-info-description-required:
+    description: All Highlight OpenAPI specs MUST include a non-empty info.description.
+    given: $.info
+    severity: error
+    then:
+      field: description
+      function: truthy
+
+  highlight-info-contact-required:
+    description: All Highlight OpenAPI specs MUST include info.contact with name and url.
+    given: $.info.contact
+    severity: warn
+    then:
+      - field: name
+        function: truthy
+      - field: url
+        function: truthy
+
+  highlight-info-license-apache-2-0:
+    description: Highlight OpenAPI specs SHOULD declare the Apache 2.0 license for ingestion endpoints.
+    given: $.info.license
+    severity: warn
+    then:
+      field: name
+      function: pattern
+      functionOptions:
+        match: "^Apache"
+
+  highlight-servers-required:
+    description: Every Highlight OpenAPI spec MUST list at least one server.
+    given: $
+    severity: error
+    then:
+      field: servers
+      function: truthy
+
+  highlight-server-https-required:
+    description: Hosted Highlight ingestion endpoints MUST use https.
+    given: $.servers[?(@.url =~ /highlight\.io/)]
+    severity: error
+    then:
+      field: url
+      function: pattern
+      functionOptions:
+        match: "^https://"
+
+  highlight-operation-id-camelcase:
+    description: Operation IDs MUST be camelCase.
+    given: $.paths[*][*].operationId
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-zA-Z0-9]*$"
+
+  highlight-operation-summary-title-case:
+    description: Operation summaries MUST start with a capital letter (Title Case).
+    given: $.paths[*][*].summary
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z]"
+
+  highlight-operation-description-required:
+    description: Every operation MUST include a description.
+    given: $.paths[*][*]
+    severity: error
+    then:
+      field: description
+      function: truthy
+
+  highlight-operation-tags-required:
+    description: Every operation MUST be tagged.
+    given: $.paths[*][*]
+    severity: error
+    then:
+      field: tags
+      function: truthy
+
+  highlight-response-200-or-2xx-required:
+    description: Every operation MUST document a 2xx response.
+    given: $.paths[*][*].responses
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - required: ['200']
+            - required: ['201']
+            - required: ['202']
+            - required: ['2XX']
+
+  highlight-error-responses-recommended:
+    description: Highlight ingestion endpoints SHOULD document 400 and 429 responses.
+    given: $.paths[*][post].responses
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          allOf:
+            - required: ['400']
+            - required: ['429']
+
+  highlight-otlp-content-types:
+    description: OTLP endpoints MUST accept application/json and SHOULD accept application/x-protobuf.
+    given: $.paths[?(@property =~ /v1\/(traces|logs|metrics)/)][post].requestBody.content
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          required: ['application/json']

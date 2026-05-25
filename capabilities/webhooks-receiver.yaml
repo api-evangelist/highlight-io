@@ -1,0 +1,38 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Highlight Webhooks API — Alert Receiver
+  description: 'Highlight Webhooks API — Alert Receiver. 1 operation. Lead operation: Receive Highlight Alert Webhook.
+    Self-contained Naftiko capability that exposes a receiver endpoint for Highlight alert webhooks (Error, Session,
+    User, Log, Trace, Metric monitor).'
+  tags:
+  - Highlight
+  - Webhooks
+  - Alerts
+  - Inbound
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds: []
+capability:
+  consumes: []
+  exposes:
+  - type: rest
+    namespace: webhooks-receiver-rest
+    port: 8080
+    description: REST receiver for Highlight alert webhooks.
+    resources:
+    - path: /v1/highlight/webhook
+      name: root
+      description: Highlight alert webhook destination URL.
+      operations:
+      - method: POST
+        name: receiveHighlightAlertWebhook
+        description: Receive a Highlight alert webhook payload.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: AlertWebhookPayload (Event, AlertName, ProjectID, Count, plus alert-type-specific fields).
+          required: true
+        outputParameters:
+        - type: object
+          mapping: $.

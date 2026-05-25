@@ -1,0 +1,81 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Highlight OTLP Metrics API — Metrics
+  description: 'Highlight OTLP Metrics API — Metrics. 1 operation. Lead operation: Export Metrics Service. Self-contained
+    Naftiko capability that submits OpenTelemetry metric batches to Highlight.'
+  tags:
+  - Highlight
+  - OpenTelemetry
+  - Metrics
+  - Observability
+  - Beta
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    HIGHLIGHT_PROJECT_ID: HIGHLIGHT_PROJECT_ID
+    HIGHLIGHT_OTLP_ENDPOINT: HIGHLIGHT_OTLP_ENDPOINT
+capability:
+  consumes:
+  - type: http
+    namespace: otlp-metrics
+    baseUri: '{{env.HIGHLIGHT_OTLP_ENDPOINT}}'
+    description: Highlight OTLP Metrics ingestion (beta).
+    resources:
+    - name: v1-metrics
+      path: /v1/metrics
+      operations:
+      - name: exportMetrics
+        method: POST
+        description: Export OpenTelemetry metric batch to Highlight.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: ExportMetricsServiceRequest payload (resourceMetrics).
+          required: true
+    authentication:
+      type: none
+  exposes:
+  - type: rest
+    namespace: otlp-metrics-rest
+    port: 8080
+    description: REST adapter for Highlight OTLP Metrics ingestion.
+    resources:
+    - path: /v1/v1/metrics
+      name: v1-metrics
+      description: REST surface for OTLP metric export.
+      operations:
+      - method: POST
+        name: exportMetrics
+        description: Export OpenTelemetry metric batch to Highlight.
+        call: otlp-metrics.exportMetrics
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: otlp-metrics-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Highlight OTLP Metrics ingestion.
+    tools:
+    - name: highlight-export-metrics
+      description: Export OpenTelemetry metric batch to Highlight.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: otlp-metrics.exportMetrics
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
