@@ -1,0 +1,94 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Backend Session Payload
+  summary: Mark the backend as set up for a project, then push backend errors and logs against a session secure id.
+  description: >-
+    Highlight's server-side SDKs report backend errors and logs tied to a browser
+    session through two documented GraphQL mutations on the public ingestion
+    endpoint: markBackendSetup, which records that a backend is wired up for the
+    project, and pushBackendPayload, which uploads backend errors and logs keyed
+    by the session secure id. This workflow runs them in sequence so a backend
+    error captured during a known session is delivered and attributed correctly.
+    Both mutations target the same project and session, so the steps form a
+    coherent backend reporting chain. Every step spells out its GraphQL request
+    inline so the flow can be read and executed without opening the underlying
+    OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: sessionIngestionApi
+  url: ../openapi/highlight-session-ingestion-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: backend-session-payload
+  summary: Mark backend setup for a project, then push backend errors against a session.
+  description: >-
+    Runs markBackendSetup to register the backend for the project and session,
+    then pushBackendPayload to upload backend errors and logs keyed by the session
+    secure id.
+  inputs:
+    type: object
+    required:
+    - projectVerboseId
+    - sessionSecureId
+    - errors
+    properties:
+      projectVerboseId:
+        type: string
+        description: The Highlight project verbose id the backend is reporting for.
+      sessionSecureId:
+        type: string
+        description: The secure id of the session the backend payload is attributed to.
+      type:
+        type: string
+        description: The backend setup type recorded by markBackendSetup.
+        default: error
+      errors:
+        type: array
+        description: The array of BackendErrorObjectInput records to push.
+        items:
+          type: object
+  steps:
+  - stepId: markBackendSetup
+    description: >-
+      Run the markBackendSetup GraphQL mutation to record that a backend is wired
+      up for the project and session.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: markBackendSetup
+        query: >-
+          mutation markBackendSetup($project_id: String, $session_secure_id:
+          String, $type: String!) { markBackendSetup(project_id: $project_id,
+          session_secure_id: $session_secure_id, type: $type) }
+        variables:
+          project_id: $inputs.projectVerboseId
+          session_secure_id: $inputs.sessionSecureId
+          type: $inputs.type
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      setupResult: $response.body#/data/markBackendSetup
+  - stepId: pushBackendErrors
+    description: >-
+      Run the pushBackendPayload GraphQL mutation to upload backend errors keyed
+      by the session secure id.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: pushBackendPayload
+        query: >-
+          mutation pushBackendPayload($project_id: String!, $errors:
+          [BackendErrorObjectInput]!) { pushBackendPayload(project_id:
+          $project_id, errors: $errors) }
+        variables:
+          project_id: $inputs.projectVerboseId
+          errors: $inputs.errors
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      pushResult: $response.body#/data/pushBackendPayload
+  outputs:
+    setupResult: $steps.markBackendSetup.outputs.setupResult
+    pushResult: $steps.pushBackendErrors.outputs.pushResult

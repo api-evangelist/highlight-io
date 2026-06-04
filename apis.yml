@@ -155,6 +155,39 @@ image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jp
 access: 3rd-Party
 x-type: company
 common:
+- type: ArazzoWorkflows
+  url: arazzo/
+  workflows:
+  - url: arazzo/highlight-io-backend-error-report-workflow.yml
+    name: Highlight Backend Error Report
+    summary: Record a backend error as an OTLP error span and a matching error log so Highlight groups it into an error group.
+  - url: arazzo/highlight-io-backend-session-payload-workflow.yml
+    name: Highlight Backend Session Payload
+    summary: Mark the backend as set up for a project, then push backend errors and logs against a session secure id.
+  - url: arazzo/highlight-io-browser-session-lifecycle-workflow.yml
+    name: Highlight Browser Session Lifecycle
+    summary: Initialize a browser session, identify its user, then push a recording payload using the returned session secure id.
+  - url: arazzo/highlight-io-correlated-backend-telemetry-export-workflow.yml
+    name: Highlight Correlated Backend Telemetry Export
+    summary: Export traces, then logs, then metrics for the same project and trace so backend signals correlate in Highlight.
+  - url: arazzo/highlight-io-frontend-error-capture-workflow.yml
+    name: Highlight Frontend Error Capture
+    summary: Open a browser session and push a payload of frontend errors so Highlight groups them against the replay.
+  - url: arazzo/highlight-io-fullstack-error-correlation-workflow.yml
+    name: Highlight Fullstack Error Correlation
+    summary: Open a session, push a frontend error, then push a backend error keyed to the same session so both group against one replay.
+  - url: arazzo/highlight-io-fullstack-session-correlation-workflow.yml
+    name: Highlight Fullstack Session Correlation
+    summary: Open a browser session, then emit a backend OTLP span tagged with that session id so frontend replay and backend trace correlate.
+  - url: arazzo/highlight-io-logs-and-metrics-batch-workflow.yml
+    name: Highlight Logs and Metrics Batch
+    summary: Submit a batch of OTLP logs and then a batch of OTLP metrics for the same Highlight project in one pass.
+  - url: arazzo/highlight-io-session-feedback-capture-workflow.yml
+    name: Highlight Session Feedback Capture
+    summary: Open a session, attach searchable session properties, then record end-user feedback against that session.
+  - url: arazzo/highlight-io-session-track-event-workflow.yml
+    name: Highlight Session Track Event
+    summary: Open a session, attach track-event properties to it, then flush a recording payload.
 - url: https://www.highlight.io
   type: Portal
 - url: https://www.highlight.io/docs

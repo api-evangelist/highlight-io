@@ -1,0 +1,186 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Correlated Backend Telemetry Export
+  summary: Export traces, then logs, then metrics for the same project and trace so backend signals correlate in Highlight.
+  description: >-
+    Highlight's backend observability is fed entirely by OpenTelemetry ingestion
+    endpoints. This workflow emits a correlated set of backend signals for a
+    single request: first an OTLP trace span, then OTLP logs that reference the
+    same `highlight.project_id` and `highlight.trace_id`, then OTLP metrics for
+    the same project. Sharing the project id and trace id across all three
+    exports is what lets the Highlight dashboard stitch the span, its logs, and
+    the metrics emitted during it into one correlated view. Every step spells out
+    its request inline so the flow can be read and executed without opening the
+    underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: tracesApi
+  url: ../openapi/highlight-otlp-traces-api-openapi.yml
+  type: openapi
+- name: logsApi
+  url: ../openapi/highlight-otlp-logs-api-openapi.yml
+  type: openapi
+- name: metricsApi
+  url: ../openapi/highlight-otlp-metrics-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: correlated-backend-telemetry-export
+  summary: Emit a correlated OTLP trace, logs, and metrics batch for one Highlight project.
+  description: >-
+    Submits an OTLP span, then OTLP log records that carry the same project id
+    and trace id, then OTLP metric data points for the same project, producing a
+    single correlated backend telemetry slice in Highlight.
+  inputs:
+    type: object
+    required:
+    - projectId
+    - traceId
+    - spanId
+    - spanName
+    - startTimeUnixNano
+    - endTimeUnixNano
+    - logTimeUnixNano
+    - logBody
+    - metricName
+    - metricTimeUnixNano
+    properties:
+      projectId:
+        type: string
+        description: The Highlight project verbose id used as the highlight.project_id resource attribute.
+      serviceName:
+        type: string
+        description: The emitting service name (service.name resource attribute).
+        default: backend
+      traceId:
+        type: string
+        description: 16-byte trace identifier encoded as hex, shared by the span and the logs.
+      spanId:
+        type: string
+        description: 8-byte span identifier encoded as hex.
+      spanName:
+        type: string
+        description: Human-readable name of the span.
+      startTimeUnixNano:
+        type: string
+        description: Span start time in nanoseconds since the UNIX epoch.
+      endTimeUnixNano:
+        type: string
+        description: Span end time in nanoseconds since the UNIX epoch.
+      logTimeUnixNano:
+        type: string
+        description: Timestamp of the log record in nanoseconds since the UNIX epoch.
+      logSeverityText:
+        type: string
+        description: Human-readable severity for the log record.
+        default: INFO
+      logBody:
+        type: string
+        description: The log message body.
+      metricName:
+        type: string
+        description: The OTLP metric name.
+      metricTimeUnixNano:
+        type: string
+        description: Timestamp of the metric data point in nanoseconds since the UNIX epoch.
+      metricValue:
+        type: number
+        description: The gauge data point value.
+        default: 1
+  steps:
+  - stepId: exportSpan
+    description: >-
+      Submit a single OTLP span carrying the highlight.project_id resource
+      attribute and the supplied trace and span identifiers.
+    operationId: exportTraces
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceSpans:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeSpans:
+          - spans:
+            - traceId: $inputs.traceId
+              spanId: $inputs.spanId
+              name: $inputs.spanName
+              kind: SPAN_KIND_SERVER
+              startTimeUnixNano: $inputs.startTimeUnixNano
+              endTimeUnixNano: $inputs.endTimeUnixNano
+              status:
+                code: STATUS_CODE_OK
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedSpans: $response.body#/partialSuccess/rejectedSpans
+  - stepId: exportLogs
+    description: >-
+      Submit OTLP log records for the same project that reference the trace id
+      from the span so the logs correlate to it in Highlight.
+    operationId: exportLogs
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceLogs:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeLogs:
+          - logRecords:
+            - timeUnixNano: $inputs.logTimeUnixNano
+              severityText: $inputs.logSeverityText
+              body:
+                stringValue: $inputs.logBody
+              traceId: $inputs.traceId
+              spanId: $inputs.spanId
+              attributes:
+              - key: highlight.trace_id
+                value:
+                  stringValue: $inputs.traceId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedLogRecords: $response.body#/partialSuccess/rejectedLogRecords
+  - stepId: exportMetrics
+    description: >-
+      Submit an OTLP gauge data point for the same project, completing the
+      correlated trace, logs, and metrics slice.
+    operationId: exportMetrics
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceMetrics:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+          scopeMetrics:
+          - metrics:
+            - name: $inputs.metricName
+              gauge:
+                dataPoints:
+                - timeUnixNano: $inputs.metricTimeUnixNano
+                  asDouble: $inputs.metricValue
+                  attributes:
+                  - key: highlight.trace_id
+                    value:
+                      stringValue: $inputs.traceId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedDataPoints: $response.body#/partialSuccess/rejectedDataPoints
+  outputs:
+    rejectedSpans: $steps.exportSpan.outputs.rejectedSpans
+    rejectedLogRecords: $steps.exportLogs.outputs.rejectedLogRecords
+    rejectedDataPoints: $steps.exportMetrics.outputs.rejectedDataPoints

@@ -1,0 +1,165 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Browser Session Lifecycle
+  summary: Initialize a browser session, identify its user, then push a recording payload using the returned session secure id.
+  description: >-
+    The Highlight session-replay SDK talks to a single GraphQL-over-HTTP
+    ingestion endpoint, selecting one of several documented mutations through the
+    GraphQL operationName field. This workflow drives the core session lifecycle
+    end to end: it runs the initializeSession mutation to open a session and
+    obtain its secure id, then runs identifySession to attach a user identity,
+    then runs pushPayload to upload the first batch of rrweb events, messages,
+    and errors. Because every later mutation needs the session_secure_id minted
+    by initializeSession, the steps are genuinely chained. Every step spells out
+    its GraphQL request inline so the flow can be read and executed without
+    opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: sessionIngestionApi
+  url: ../openapi/highlight-session-ingestion-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: browser-session-lifecycle
+  summary: Open a Highlight session, identify the user, and push the first recording payload.
+  description: >-
+    Runs initializeSession to obtain a session_secure_id, then identifySession to
+    attach user identity and properties, then pushPayload to upload recorded
+    events, console messages, and frontend errors for that session.
+  inputs:
+    type: object
+    required:
+    - organizationVerboseId
+    - userIdentifier
+    properties:
+      organizationVerboseId:
+        type: string
+        description: The Highlight project verbose id that owns the session.
+      clientVersion:
+        type: string
+        description: The highlight.run client SDK version.
+        default: "9.0.0"
+      firstloadVersion:
+        type: string
+        description: The firstload script version.
+        default: "9.0.0"
+      environment:
+        type: string
+        description: The deployment environment the session was recorded in.
+        default: production
+      appVersion:
+        type: string
+        description: The application version under which the session was recorded.
+        default: "1.0.0"
+      clientId:
+        type: string
+        description: A stable client identifier for the browser.
+        default: ""
+      userIdentifier:
+        type: string
+        description: The user identifier to attach to the session (e.g. an email).
+      userObject:
+        type: object
+        description: Arbitrary user property map attached during identify.
+        default: {}
+      events:
+        type: object
+        description: The rrweb events object for the first pushPayload batch.
+        default: {}
+      messages:
+        type: string
+        description: Serialized console/network messages for the first pushPayload batch.
+        default: "[]"
+      errors:
+        type: array
+        description: Frontend errors captured in the first pushPayload batch.
+        items:
+          type: object
+        default: []
+  steps:
+  - stepId: initializeSession
+    description: >-
+      Run the initializeSession GraphQL mutation to open a new session for the
+      project and return its session_secure_id.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: initializeSession
+        query: >-
+          mutation initializeSession($organization_verbose_id: String!,
+          $enable_strict_privacy: Boolean!, $client_version: String!,
+          $firstload_version: String!, $client_config: String!, $environment:
+          String!, $appversion: String, $client_id: String!) {
+          initializeSession(organization_verbose_id: $organization_verbose_id,
+          enable_strict_privacy: $enable_strict_privacy, client_version:
+          $client_version, firstload_version: $firstload_version, client_config:
+          $client_config, environment: $environment, appversion: $appversion,
+          client_id: $client_id) { secure_id project_id } }
+        variables:
+          organization_verbose_id: $inputs.organizationVerboseId
+          enable_strict_privacy: false
+          client_version: $inputs.clientVersion
+          firstload_version: $inputs.firstloadVersion
+          client_config: "{}"
+          environment: $inputs.environment
+          appversion: $inputs.appVersion
+          client_id: $inputs.clientId
+    successCriteria:
+    - condition: $statusCode == 200
+    - context: $response.body
+      condition: $.data.initializeSession.secure_id != null
+      type: jsonpath
+    outputs:
+      sessionSecureId: $response.body#/data/initializeSession/secure_id
+      projectId: $response.body#/data/initializeSession/project_id
+  - stepId: identifySession
+    description: >-
+      Run the identifySession GraphQL mutation to attach a user identity and
+      property map to the session opened above.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: identifySession
+        query: >-
+          mutation identifySession($session_secure_id: String!, $user_identifier:
+          String!, $user_object: Any) { identifySession(session_secure_id:
+          $session_secure_id, user_identifier: $user_identifier, user_object:
+          $user_object) }
+        variables:
+          session_secure_id: $steps.initializeSession.outputs.sessionSecureId
+          user_identifier: $inputs.userIdentifier
+          user_object: $inputs.userObject
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      identified: $response.body#/data/identifySession
+  - stepId: pushFirstPayload
+    description: >-
+      Run the pushPayload GraphQL mutation to upload the first batch of recorded
+      events, console messages, and frontend errors for the session.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: pushPayload
+        query: >-
+          mutation pushPayload($session_secure_id: String!, $events:
+          ReplayEventsInput!, $messages: String!, $errors: [ErrorObjectInput]!,
+          $payload_id: ID) { pushPayload(session_secure_id: $session_secure_id,
+          events: $events, messages: $messages, errors: $errors, payload_id:
+          $payload_id) }
+        variables:
+          session_secure_id: $steps.initializeSession.outputs.sessionSecureId
+          events: $inputs.events
+          messages: $inputs.messages
+          errors: $inputs.errors
+          payload_id: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      payloadResult: $response.body#/data/pushPayload
+  outputs:
+    sessionSecureId: $steps.initializeSession.outputs.sessionSecureId
+    projectId: $steps.initializeSession.outputs.projectId
+    payloadResult: $steps.pushFirstPayload.outputs.payloadResult

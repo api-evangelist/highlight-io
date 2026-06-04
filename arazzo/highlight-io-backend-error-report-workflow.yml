@@ -1,0 +1,163 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Backend Error Report
+  summary: Record a backend error as an OTLP error span and a matching error log so Highlight groups it into an error group.
+  description: >-
+    Highlight has no error-management REST API; backend errors are reported by
+    emitting OpenTelemetry signals carrying error semantics, which Highlight then
+    aggregates into error groups in its dashboard. This workflow records one
+    backend error twice over: first as an OTLP span whose status code is
+    STATUS_CODE_ERROR and that carries an exception event, then as an OTLP log
+    record at ERROR severity referencing the same project and trace id. Together
+    they give Highlight the span context and the message it needs to fingerprint
+    and group the error. Every step spells out its request inline so the flow can
+    be read and executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: tracesApi
+  url: ../openapi/highlight-otlp-traces-api-openapi.yml
+  type: openapi
+- name: logsApi
+  url: ../openapi/highlight-otlp-logs-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: backend-error-report
+  summary: Report a backend error to Highlight as a correlated OTLP error span and error log.
+  description: >-
+    Emits an OTLP span with an error status and exception event, then an OTLP
+    ERROR-severity log record for the same project and trace id, so Highlight can
+    fingerprint and aggregate the error into an error group.
+  inputs:
+    type: object
+    required:
+    - projectId
+    - traceId
+    - spanId
+    - spanName
+    - startTimeUnixNano
+    - endTimeUnixNano
+    - errorMessage
+    - errorTimeUnixNano
+    properties:
+      projectId:
+        type: string
+        description: The Highlight project verbose id used as the highlight.project_id resource attribute.
+      serviceName:
+        type: string
+        description: The emitting service name (service.name resource attribute).
+        default: backend
+      traceId:
+        type: string
+        description: 16-byte trace identifier encoded as hex, shared by the span and the error log.
+      spanId:
+        type: string
+        description: 8-byte span identifier encoded as hex.
+      spanName:
+        type: string
+        description: Name of the span in which the error occurred.
+      startTimeUnixNano:
+        type: string
+        description: Span start time in nanoseconds since the UNIX epoch.
+      endTimeUnixNano:
+        type: string
+        description: Span end time in nanoseconds since the UNIX epoch.
+      errorType:
+        type: string
+        description: The exception type used as the exception.type span event attribute.
+        default: Error
+      errorMessage:
+        type: string
+        description: The error message, reused as exception.message and the log body.
+      errorStacktrace:
+        type: string
+        description: The exception stacktrace recorded as the exception.stacktrace span event attribute.
+        default: ""
+      errorTimeUnixNano:
+        type: string
+        description: Timestamp of the error log record in nanoseconds since the UNIX epoch.
+  steps:
+  - stepId: exportErrorSpan
+    description: >-
+      Submit an OTLP span with STATUS_CODE_ERROR status and an exception event
+      that captures the error type, message, and stacktrace.
+    operationId: exportTraces
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceSpans:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeSpans:
+          - spans:
+            - traceId: $inputs.traceId
+              spanId: $inputs.spanId
+              name: $inputs.spanName
+              kind: SPAN_KIND_SERVER
+              startTimeUnixNano: $inputs.startTimeUnixNano
+              endTimeUnixNano: $inputs.endTimeUnixNano
+              status:
+                code: STATUS_CODE_ERROR
+                message: $inputs.errorMessage
+              events:
+              - timeUnixNano: $inputs.endTimeUnixNano
+                name: exception
+                attributes:
+                - key: exception.type
+                  value:
+                    stringValue: $inputs.errorType
+                - key: exception.message
+                  value:
+                    stringValue: $inputs.errorMessage
+                - key: exception.stacktrace
+                  value:
+                    stringValue: $inputs.errorStacktrace
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedSpans: $response.body#/partialSuccess/rejectedSpans
+  - stepId: exportErrorLog
+    description: >-
+      Submit an OTLP ERROR-severity log record for the same project and trace id
+      so the error message is searchable and grouped alongside the error span.
+    operationId: exportLogs
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceLogs:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeLogs:
+          - logRecords:
+            - timeUnixNano: $inputs.errorTimeUnixNano
+              severityNumber: 17
+              severityText: ERROR
+              body:
+                stringValue: $inputs.errorMessage
+              traceId: $inputs.traceId
+              spanId: $inputs.spanId
+              attributes:
+              - key: highlight.trace_id
+                value:
+                  stringValue: $inputs.traceId
+              - key: exception.type
+                value:
+                  stringValue: $inputs.errorType
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedLogRecords: $response.body#/partialSuccess/rejectedLogRecords
+  outputs:
+    rejectedSpans: $steps.exportErrorSpan.outputs.rejectedSpans
+    rejectedLogRecords: $steps.exportErrorLog.outputs.rejectedLogRecords

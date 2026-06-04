@@ -1,0 +1,158 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Fullstack Session Correlation
+  summary: Open a browser session, then emit a backend OTLP span tagged with that session id so frontend replay and backend trace correlate.
+  description: >-
+    Highlight stitches a frontend session replay to backend traces by sharing the
+    session secure id as the highlight.session_id attribute on backend spans.
+    This workflow performs that fullstack handshake: it runs the initializeSession
+    GraphQL mutation against the public ingestion endpoint to open a session and
+    obtain its secure id, then submits an OTLP span to the OTLP collector that
+    carries highlight.session_id set to that secure id alongside the
+    highlight.project_id. The OTLP export depends on the secure id minted by the
+    session mutation, so the two specs are genuinely chained. Every step spells
+    out its request inline so the flow can be read and executed without opening
+    the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: sessionIngestionApi
+  url: ../openapi/highlight-session-ingestion-api-openapi.yml
+  type: openapi
+- name: tracesApi
+  url: ../openapi/highlight-otlp-traces-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: fullstack-session-correlation
+  summary: Open a Highlight session and emit a backend span tagged with its session id.
+  description: >-
+    Runs initializeSession to obtain a session_secure_id, then exports an OTLP
+    span carrying highlight.session_id set to that secure id so the frontend
+    replay and the backend trace correlate in Highlight.
+  inputs:
+    type: object
+    required:
+    - organizationVerboseId
+    - projectId
+    - traceId
+    - spanId
+    - spanName
+    - startTimeUnixNano
+    - endTimeUnixNano
+    properties:
+      organizationVerboseId:
+        type: string
+        description: The Highlight project verbose id used when opening the session.
+      projectId:
+        type: string
+        description: The Highlight project verbose id used as the highlight.project_id resource attribute on the span.
+      clientVersion:
+        type: string
+        description: The highlight.run client SDK version.
+        default: "9.0.0"
+      firstloadVersion:
+        type: string
+        description: The firstload script version.
+        default: "9.0.0"
+      environment:
+        type: string
+        description: The deployment environment.
+        default: production
+      clientId:
+        type: string
+        description: A stable client identifier for the browser.
+        default: ""
+      serviceName:
+        type: string
+        description: The emitting backend service name.
+        default: backend
+      traceId:
+        type: string
+        description: 16-byte trace identifier encoded as hex.
+      spanId:
+        type: string
+        description: 8-byte span identifier encoded as hex.
+      spanName:
+        type: string
+        description: Name of the backend span.
+      startTimeUnixNano:
+        type: string
+        description: Span start time in nanoseconds since the UNIX epoch.
+      endTimeUnixNano:
+        type: string
+        description: Span end time in nanoseconds since the UNIX epoch.
+  steps:
+  - stepId: initializeSession
+    description: >-
+      Run the initializeSession GraphQL mutation to open a session and return its
+      session_secure_id for use as the backend correlation key.
+    operationId: executePublicGraphMutation
+    requestBody:
+      contentType: application/json
+      payload:
+        operationName: initializeSession
+        query: >-
+          mutation initializeSession($organization_verbose_id: String!,
+          $enable_strict_privacy: Boolean!, $client_version: String!,
+          $firstload_version: String!, $client_config: String!, $environment:
+          String!, $client_id: String!) {
+          initializeSession(organization_verbose_id: $organization_verbose_id,
+          enable_strict_privacy: $enable_strict_privacy, client_version:
+          $client_version, firstload_version: $firstload_version, client_config:
+          $client_config, environment: $environment, client_id: $client_id) {
+          secure_id project_id } }
+        variables:
+          organization_verbose_id: $inputs.organizationVerboseId
+          enable_strict_privacy: false
+          client_version: $inputs.clientVersion
+          firstload_version: $inputs.firstloadVersion
+          client_config: "{}"
+          environment: $inputs.environment
+          client_id: $inputs.clientId
+    successCriteria:
+    - condition: $statusCode == 200
+    - context: $response.body
+      condition: $.data.initializeSession.secure_id != null
+      type: jsonpath
+    outputs:
+      sessionSecureId: $response.body#/data/initializeSession/secure_id
+  - stepId: exportCorrelatedSpan
+    description: >-
+      Submit an OTLP span carrying highlight.session_id set to the session secure
+      id so the backend trace correlates with the frontend replay.
+    operationId: exportTraces
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceSpans:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeSpans:
+          - spans:
+            - traceId: $inputs.traceId
+              spanId: $inputs.spanId
+              name: $inputs.spanName
+              kind: SPAN_KIND_SERVER
+              startTimeUnixNano: $inputs.startTimeUnixNano
+              endTimeUnixNano: $inputs.endTimeUnixNano
+              attributes:
+              - key: highlight.session_id
+                value:
+                  stringValue: $steps.initializeSession.outputs.sessionSecureId
+              - key: highlight.trace_id
+                value:
+                  stringValue: $inputs.traceId
+              status:
+                code: STATUS_CODE_OK
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedSpans: $response.body#/partialSuccess/rejectedSpans
+  outputs:
+    sessionSecureId: $steps.initializeSession.outputs.sessionSecureId
+    rejectedSpans: $steps.exportCorrelatedSpan.outputs.rejectedSpans

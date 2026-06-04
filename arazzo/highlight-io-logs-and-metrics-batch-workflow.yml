@@ -1,0 +1,123 @@
+arazzo: 1.0.1
+info:
+  title: Highlight Logs and Metrics Batch
+  summary: Submit a batch of OTLP logs and then a batch of OTLP metrics for the same Highlight project in one pass.
+  description: >-
+    A common server-side reporting cycle flushes both structured logs and the
+    counters or gauges accumulated during the same window. This workflow does
+    exactly that against Highlight's OTLP collector: it first submits an
+    ExportLogsServiceRequest of log records carrying the highlight.project_id
+    resource attribute, then submits an ExportMetricsServiceRequest of metric data
+    points for the same project. Routing both batches to the same project lets the
+    Highlight dashboard, monitors, and metrics SQL editor reason over the logs and
+    metrics together. Every step spells out its request inline so the flow can be
+    read and executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: logsApi
+  url: ../openapi/highlight-otlp-logs-api-openapi.yml
+  type: openapi
+- name: metricsApi
+  url: ../openapi/highlight-otlp-metrics-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: logs-and-metrics-batch
+  summary: Flush an OTLP log batch and an OTLP metric batch for one Highlight project.
+  description: >-
+    Submits a batch of OTLP log records, then a batch of OTLP metric data points,
+    both carrying the same highlight.project_id so they land in the same project.
+  inputs:
+    type: object
+    required:
+    - projectId
+    - logTimeUnixNano
+    - logBody
+    - metricName
+    - metricTimeUnixNano
+    properties:
+      projectId:
+        type: string
+        description: The Highlight project verbose id used as the highlight.project_id resource attribute.
+      serviceName:
+        type: string
+        description: The emitting service name (service.name resource attribute).
+        default: backend
+      logTimeUnixNano:
+        type: string
+        description: Timestamp of the log record in nanoseconds since the UNIX epoch.
+      logSeverityText:
+        type: string
+        description: Human-readable severity for the log record.
+        default: INFO
+      logBody:
+        type: string
+        description: The log message body.
+      metricName:
+        type: string
+        description: The OTLP metric name.
+      metricTimeUnixNano:
+        type: string
+        description: Timestamp of the metric data point in nanoseconds since the UNIX epoch.
+      metricValue:
+        type: number
+        description: The gauge data point value.
+        default: 1
+  steps:
+  - stepId: exportLogs
+    description: >-
+      Submit a batch of OTLP log records carrying the highlight.project_id
+      resource attribute.
+    operationId: exportLogs
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceLogs:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeLogs:
+          - logRecords:
+            - timeUnixNano: $inputs.logTimeUnixNano
+              severityText: $inputs.logSeverityText
+              body:
+                stringValue: $inputs.logBody
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedLogRecords: $response.body#/partialSuccess/rejectedLogRecords
+  - stepId: exportMetrics
+    description: >-
+      Submit a batch of OTLP gauge data points for the same project so the metrics
+      land alongside the logs.
+    operationId: exportMetrics
+    requestBody:
+      contentType: application/json
+      payload:
+        resourceMetrics:
+        - resource:
+            attributes:
+            - key: highlight.project_id
+              value:
+                stringValue: $inputs.projectId
+            - key: service.name
+              value:
+                stringValue: $inputs.serviceName
+          scopeMetrics:
+          - metrics:
+            - name: $inputs.metricName
+              gauge:
+                dataPoints:
+                - timeUnixNano: $inputs.metricTimeUnixNano
+                  asDouble: $inputs.metricValue
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      rejectedDataPoints: $response.body#/partialSuccess/rejectedDataPoints
+  outputs:
+    rejectedLogRecords: $steps.exportLogs.outputs.rejectedLogRecords
+    rejectedDataPoints: $steps.exportMetrics.outputs.rejectedDataPoints
