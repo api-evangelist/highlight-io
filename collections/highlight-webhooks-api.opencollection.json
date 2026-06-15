@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Highlight Webhooks API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Receive Highlight Alert Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.com/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delivered when an alert subscription matches. The customer endpoint should validate the optional shared-secret header (planned) and respond with `2xx` within 10 seconds to avoid retries.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

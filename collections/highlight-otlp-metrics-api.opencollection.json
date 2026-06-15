@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Highlight OTLP Metrics API",
+    "version": "1.0-beta"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Export Metrics Service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://otel.highlight.io/v1/metrics",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of OpenTelemetry metric data points. Resource attribute `highlight.project_id` is required.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

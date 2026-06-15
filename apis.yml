@@ -17,12 +17,11 @@ apis:
     type: OpenAPI
   - url: json-schema/highlight-trace-schema.json
     type: JSONSchema
-  - type: NaftikoCapability
-    url: capabilities/otlp-traces.yaml
-  description: Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts
-    standard OTLP `ResourceSpans` payloads at `https://otel.highlight.io/v1/traces`. Spans carry the
-    `highlight.project_id` resource attribute and optional `highlight.session_id` / `highlight.trace_id` so
-    server-side spans correlate with frontend session replay.
+  description: >-
+    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts standard OTLP
+    `ResourceSpans` payloads at `https://otel.highlight.io/v1/traces`. Spans carry the `highlight.project_id` resource
+    attribute and optional `highlight.session_id` / `highlight.trace_id` so server-side spans correlate with frontend
+    session replay.
 - aid: highlight-io:highlight-otlp-logs-api
   name: Highlight OTLP Logs API
   tags:
@@ -38,11 +37,10 @@ apis:
     type: OpenAPI
   - url: json-schema/highlight-log-schema.json
     type: JSONSchema
-  - type: NaftikoCapability
-    url: capabilities/otlp-logs.yaml
-  description: Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs at
-    `https://otel.highlight.io/v1/logs`. Supports severity levels, trace/span correlation, and arbitrary
-    attributes. Highlight stores logs in ClickHouse for sub-second full-text search and pattern detection.
+  description: >-
+    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs at
+    `https://otel.highlight.io/v1/logs`. Supports severity levels, trace/span correlation, and arbitrary attributes.
+    Highlight stores logs in ClickHouse for sub-second full-text search and pattern detection.
 - aid: highlight-io:highlight-otlp-metrics-api
   name: Highlight OTLP Metrics API
   tags:
@@ -56,11 +54,10 @@ apis:
     type: Documentation
   - url: openapi/highlight-otlp-metrics-api-openapi.yml
     type: OpenAPI
-  - type: NaftikoCapability
-    url: capabilities/otlp-metrics.yaml
-  description: Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics at
-    `https://otel.highlight.io/v1/metrics`. Accepts gauges, sums, histograms, and exponential histograms and
-    drives Highlight dashboards, alerts, and the metrics SQL editor.
+  description: >-
+    Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics at
+    `https://otel.highlight.io/v1/metrics`. Accepts gauges, sums, histograms, and exponential histograms and drives
+    Highlight dashboards, alerts, and the metrics SQL editor.
 - aid: highlight-io:highlight-session-ingestion-api
   name: Highlight Session Ingestion API
   tags:
@@ -76,11 +73,12 @@ apis:
     type: OpenAPI
   - url: json-schema/highlight-session-schema.json
     type: JSONSchema
-  - type: NaftikoCapability
-    url: capabilities/session-ingestion.yaml
-  description: GraphQL-over-HTTP session replay ingestion endpoint at `https://pub.highlight.io` used by the
-    `highlight.run` browser SDK to upload rrweb DOM snapshots, console/network recording, custom events, identify
-    payloads, and error reports. Public, project-id authenticated, no user secrets required.
+  - url: graphql/highlight-io-graphql.md
+    type: GraphQL
+  description: >-
+    GraphQL-over-HTTP session replay ingestion endpoint at `https://pub.highlight.io` used by the `highlight.run`
+    browser SDK to upload rrweb DOM snapshots, console/network recording, custom events, identify payloads, and error
+    reports. Public, project-id authenticated, no user secrets required.
 - aid: highlight-io:highlight-private-graphql-api
   name: Highlight Private GraphQL API
   tags:
@@ -94,12 +92,11 @@ apis:
     type: Documentation
   - url: https://www.highlight.io/docs/general/product-features/general-features/api
     type: Documentation
-  - type: NaftikoCapability
-    url: capabilities/private-graphql.yaml
-  description: Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to
-    list, search, and manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and
-    integrations. Authenticated via dashboard session cookie or workspace admin API token; the schema is
-    open-source under `backend/private-graph/graph` but is not a stable public contract.
+  description: >-
+    Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list, search, and
+    manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and integrations. Authenticated
+    via dashboard session cookie or workspace admin API token; the schema is open-source under
+    `backend/private-graph/graph` but is not a stable public contract.
 - aid: highlight-io:highlight-webhooks-api
   name: Highlight Webhooks API
   tags:
@@ -113,11 +110,10 @@ apis:
     type: Documentation
   - url: openapi/highlight-webhooks-api-openapi.yml
     type: AsyncEvents
-  - type: NaftikoCapability
-    url: capabilities/webhooks-receiver.yaml
-  description: Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied
-    URL with alert metadata (name, type, count), error/session/log/metric context, project routing, and action
-    URLs to resolve, ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor alerts.
+  description: >-
+    Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL with alert
+    metadata (name, type, count), error/session/log/metric context, project routing, and action URLs to resolve,
+    ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor alerts.
 - aid: highlight-io:highlight-self-hosted-api
   name: Highlight Self-Hosted Deployment
   tags:
@@ -134,10 +130,11 @@ apis:
     type: Documentation
   - url: https://github.com/highlight/highlight/tree/main/docker
     type: SourceCode
-  description: Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host
-    docker-compose), Hobby (single-host Docker for low-volume production), and Enterprise (Kubernetes with
-    horizontal scaling, ClickHouse cluster, and managed retention). All ingestion endpoints (OTLP traces, logs,
-    metrics; pub.highlight.io session ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
+  description: >-
+    Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose), Hobby
+    (single-host Docker for low-volume production), and Enterprise (Kubernetes with horizontal scaling, ClickHouse
+    cluster, and managed retention). All ingestion endpoints (OTLP traces, logs, metrics; pub.highlight.io session
+    ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
 name: Highlight (highlight.io)
 tags:
 - Observability
@@ -155,30 +152,42 @@ image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jp
 access: 3rd-Party
 x-type: company
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/highlight-highlightio/overview
 - type: ArazzoWorkflows
   url: arazzo/
   workflows:
   - url: arazzo/highlight-io-backend-error-report-workflow.yml
     name: Highlight Backend Error Report
-    summary: Record a backend error as an OTLP error span and a matching error log so Highlight groups it into an error group.
+    summary: >-
+      Record a backend error as an OTLP error span and a matching error log so Highlight groups it into an error
+      group.
   - url: arazzo/highlight-io-backend-session-payload-workflow.yml
     name: Highlight Backend Session Payload
     summary: Mark the backend as set up for a project, then push backend errors and logs against a session secure id.
   - url: arazzo/highlight-io-browser-session-lifecycle-workflow.yml
     name: Highlight Browser Session Lifecycle
-    summary: Initialize a browser session, identify its user, then push a recording payload using the returned session secure id.
+    summary: >-
+      Initialize a browser session, identify its user, then push a recording payload using the returned session
+      secure id.
   - url: arazzo/highlight-io-correlated-backend-telemetry-export-workflow.yml
     name: Highlight Correlated Backend Telemetry Export
-    summary: Export traces, then logs, then metrics for the same project and trace so backend signals correlate in Highlight.
+    summary: >-
+      Export traces, then logs, then metrics for the same project and trace so backend signals correlate in
+      Highlight.
   - url: arazzo/highlight-io-frontend-error-capture-workflow.yml
     name: Highlight Frontend Error Capture
     summary: Open a browser session and push a payload of frontend errors so Highlight groups them against the replay.
   - url: arazzo/highlight-io-fullstack-error-correlation-workflow.yml
     name: Highlight Fullstack Error Correlation
-    summary: Open a session, push a frontend error, then push a backend error keyed to the same session so both group against one replay.
+    summary: >-
+      Open a session, push a frontend error, then push a backend error keyed to the same session so both group
+      against one replay.
   - url: arazzo/highlight-io-fullstack-session-correlation-workflow.yml
     name: Highlight Fullstack Session Correlation
-    summary: Open a browser session, then emit a backend OTLP span tagged with that session id so frontend replay and backend trace correlate.
+    summary: >-
+      Open a browser session, then emit a backend OTLP span tagged with that session id so frontend replay and
+      backend trace correlate.
   - url: arazzo/highlight-io-logs-and-metrics-batch-workflow.yml
     name: Highlight Logs and Metrics Batch
     summary: Submit a batch of OTLP logs and then a batch of OTLP metrics for the same Highlight project in one pass.
@@ -357,13 +366,15 @@ common:
   - Frontend correlation — server spans/logs join the originating browser session via highlight.session_id
   - AI-generated session insights and weekly digests
   - Webhook destinations for alerts (Error, Session, User, Log, Trace, Metric monitors)
-  - 25+ first-party integrations including Slack, Discord, Microsoft Teams, GitHub, Jira, Linear, ClickUp,
-    Vercel, LaunchDarkly, Grafana, Amplitude, Mixpanel, Segment
+  - >-
+    25+ first-party integrations including Slack, Discord, Microsoft Teams, GitHub, Jira, Linear, ClickUp, Vercel,
+    LaunchDarkly, Grafana, Amplitude, Mixpanel, Segment
   - Browser SDKs for React, Next.js, Remix, Vue, Angular, Gatsby, SvelteKit, Electron, React Native (beta)
   - Server SDKs for Node.js, Python, Go, Ruby, Rust, Elixir, Java, PHP, C# .NET
   - Hosting provider SDKs for AWS Lambda, Cloudflare Workers, Vercel, Firebase, Azure Functions, GCP
   - Privacy controls (`privacySetting: strict | default | none`) with PII redaction
-  - 100% open source under Apache 2.0 (with separate commercial license for `highlight.io/` and `enterprise/`
+  - >-
+    100% open source under Apache 2.0 (with separate commercial license for `highlight.io/` and `enterprise/`
     directories)
   - Self-hostable in three tiers — Dev (docker-compose), Hobby (single-host Docker), Enterprise (Kubernetes)
   - Powered by ClickHouse, Kafka, OpenTelemetry Collector, and Postgres
@@ -378,12 +389,13 @@ common:
 created: '2026-05-25T00:00:00.000Z'
 modified: '2026-05-25'
 position: Consuming
-description: Highlight (highlight.io) is the open-source, full-stack monitoring platform — session replay, error
-  monitoring, logging, distributed tracing, and metrics in a single tool. Built on OpenTelemetry, rrweb, and
-  ClickHouse, Highlight correlates server-side spans and logs back to the originating browser session so
-  engineers can move from a customer report to the exact line of code in one click. Available as a hosted SaaS
-  on three commercial tiers (Free / Pay-as-you-go / Business / Enterprise) and as a fully open-source
-  self-hosted deployment (Dev / Hobby / Enterprise) under Apache 2.0.
+description: >-
+  Highlight (highlight.io) is the open-source, full-stack monitoring platform — session replay, error monitoring,
+  logging, distributed tracing, and metrics in a single tool. Built on OpenTelemetry, rrweb, and ClickHouse, Highlight
+  correlates server-side spans and logs back to the originating browser session so engineers can move from a customer
+  report to the exact line of code in one click. Available as a hosted SaaS on three commercial tiers (Free /
+  Pay-as-you-go / Business / Enterprise) and as a fully open-source self-hosted deployment (Dev / Hobby / Enterprise)
+  under Apache 2.0.
 maintainers:
 - FN: Kin Lane
   email: info@apievangelist.com

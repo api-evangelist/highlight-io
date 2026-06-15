@@ -1,0 +1,209 @@
+{
+  "info": {
+    "_postman_id": "87784596-761f-43c4-8da5-4756e5b5e2d5",
+    "name": "Highlight Session Ingestion API",
+    "description": "GraphQL-over-HTTP session replay ingestion endpoint used by the `highlight.run` browser SDK. Receives rrweb DOM snapshots, console and network recordings, custom events, identify payloads, and frontend errors. Authenticated by project verbose ID (public); no user secrets required.\n\n\nContact Support:\n Name: Highlight Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-06-05T15:09:46.000Z",
+    "updatedAt": "2026-06-05T15:09:46.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-87784596-761f-43c4-8da5-4756e5b5e2d5"
+  },
+  "item": [
+    {
+      "name": "/",
+      "item": [
+        {
+          "name": "Execute Public Graph Mutation",
+          "id": "26a95760-4ee8-4df1-95dd-19c223418296",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"operationName\": \"<string>\",\n  \"variables\": {\n    \"pariatur_33\": 84423074.91927382,\n    \"id_4\": -64412440\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Single GraphQL endpoint that accepts the SDK mutations `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, and `markBackendSetup`. Operation is determined by the `operationName` field in the JSON body.\n"
+          },
+          "response": [
+            {
+              "id": "4e1702a7-6dee-473a-9818-28e9fc98c15e",
+              "name": "GraphQL response.",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"operationName\": \"<string>\",\n  \"variables\": {\n    \"pariatur_33\": 84423074.91927382,\n    \"id_4\": -64412440\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"data\": {\n    \"Duis_62\": -90792175.9382532,\n    \"ad_b\": true\n  },\n  \"errors\": [\n    {\n      \"message\": \"<string>\",\n      \"path\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"extensions\": {\n        \"aute07d\": \"quis sed\",\n        \"magna_9e\": -49961184,\n        \"ipsum4e\": \"dolor\"\n      }\n    },\n    {\n      \"message\": \"<string>\",\n      \"path\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"extensions\": {\n        \"irurea2b\": 68207482,\n        \"ea7\": -72685842,\n        \"sint_5_\": 42407019\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-06-05T15:09:46.000Z",
+              "updatedAt": "2026-06-05T15:09:46.000Z",
+              "uid": "35240-4e1702a7-6dee-473a-9818-28e9fc98c15e"
+            },
+            {
+              "id": "b31ed638-cddd-4035-8765-82344042b669",
+              "name": "Invalid GraphQL payload.",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"operationName\": \"<string>\",\n  \"variables\": {\n    \"pariatur_33\": 84423074.91927382,\n    \"id_4\": -64412440\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-06-05T15:09:46.000Z",
+              "updatedAt": "2026-06-05T15:09:46.000Z",
+              "uid": "35240-b31ed638-cddd-4035-8765-82344042b669"
+            },
+            {
+              "id": "8e9d56d5-4d80-4233-8bc4-e12c90d84217",
+              "name": "Rate limited.",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"operationName\": \"<string>\",\n  \"variables\": {\n    \"pariatur_33\": 84423074.91927382,\n    \"id_4\": -64412440\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-06-05T15:09:46.000Z",
+              "updatedAt": "2026-06-05T15:09:46.000Z",
+              "uid": "35240-8e9d56d5-4d80-4233-8bc4-e12c90d84217"
+            }
+          ],
+          "createdAt": "2026-06-05T15:09:46.000Z",
+          "updatedAt": "2026-06-05T15:09:46.000Z",
+          "uid": "35240-26a95760-4ee8-4df1-95dd-19c223418296"
+        }
+      ],
+      "id": "3cf20219-2e71-417a-b9c9-9a57e0f2f7bb",
+      "createdAt": "2026-06-05T15:09:46.000Z",
+      "updatedAt": "2026-06-05T15:09:46.000Z",
+      "uid": "35240-3cf20219-2e71-417a-b9c9-9a57e0f2f7bb"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://pub.highlight.io"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Highlight Session Ingestion API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute Public Graph Mutation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pub.highlight.io/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Single GraphQL endpoint that accepts the SDK mutations `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, and `markBackendSetup`. Operation is determined by the `operationName` field in the JSON body.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

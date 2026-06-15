@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Highlight OTLP Traces API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Traces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Export Trace Service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://otel.highlight.io/v1/traces",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of OpenTelemetry spans. The body must be an `ExportTraceServiceRequest` encoded as JSON or Protobuf. The hosted collector strips the `highlight.project_id` resource attribute and routes the spans to the matching Highlight project.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
