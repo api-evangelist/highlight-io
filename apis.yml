@@ -154,49 +154,36 @@ x-type: company
 common:
 - type: PostmanWorkspace
   url: https://www.postman.com/kinlaneapi/highlight-highlightio/overview
-- type: ArazzoWorkflows
-  url: arazzo/
-  workflows:
-  - url: arazzo/highlight-io-backend-error-report-workflow.yml
-    name: Highlight Backend Error Report
-    summary: >-
-      Record a backend error as an OTLP error span and a matching error log so Highlight groups it into an error
-      group.
-  - url: arazzo/highlight-io-backend-session-payload-workflow.yml
-    name: Highlight Backend Session Payload
-    summary: Mark the backend as set up for a project, then push backend errors and logs against a session secure id.
-  - url: arazzo/highlight-io-browser-session-lifecycle-workflow.yml
-    name: Highlight Browser Session Lifecycle
-    summary: >-
-      Initialize a browser session, identify its user, then push a recording payload using the returned session
-      secure id.
-  - url: arazzo/highlight-io-correlated-backend-telemetry-export-workflow.yml
-    name: Highlight Correlated Backend Telemetry Export
-    summary: >-
-      Export traces, then logs, then metrics for the same project and trace so backend signals correlate in
-      Highlight.
-  - url: arazzo/highlight-io-frontend-error-capture-workflow.yml
-    name: Highlight Frontend Error Capture
-    summary: Open a browser session and push a payload of frontend errors so Highlight groups them against the replay.
-  - url: arazzo/highlight-io-fullstack-error-correlation-workflow.yml
-    name: Highlight Fullstack Error Correlation
-    summary: >-
-      Open a session, push a frontend error, then push a backend error keyed to the same session so both group
-      against one replay.
-  - url: arazzo/highlight-io-fullstack-session-correlation-workflow.yml
-    name: Highlight Fullstack Session Correlation
-    summary: >-
-      Open a browser session, then emit a backend OTLP span tagged with that session id so frontend replay and
-      backend trace correlate.
-  - url: arazzo/highlight-io-logs-and-metrics-batch-workflow.yml
-    name: Highlight Logs and Metrics Batch
-    summary: Submit a batch of OTLP logs and then a batch of OTLP metrics for the same Highlight project in one pass.
-  - url: arazzo/highlight-io-session-feedback-capture-workflow.yml
-    name: Highlight Session Feedback Capture
-    summary: Open a session, attach searchable session properties, then record end-user feedback against that session.
-  - url: arazzo/highlight-io-session-track-event-workflow.yml
-    name: Highlight Session Track Event
-    summary: Open a session, attach track-event properties to it, then flush a recording payload.
+- type: Arazzo
+  url: arazzo/highlight-io-backend-error-report-workflow.yml
+  name: Highlight Backend Error Report
+- type: Arazzo
+  url: arazzo/highlight-io-backend-session-payload-workflow.yml
+  name: Highlight Backend Session Payload
+- type: Arazzo
+  url: arazzo/highlight-io-browser-session-lifecycle-workflow.yml
+  name: Highlight Browser Session Lifecycle
+- type: Arazzo
+  url: arazzo/highlight-io-correlated-backend-telemetry-export-workflow.yml
+  name: Highlight Correlated Backend Telemetry Export
+- type: Arazzo
+  url: arazzo/highlight-io-frontend-error-capture-workflow.yml
+  name: Highlight Frontend Error Capture
+- type: Arazzo
+  url: arazzo/highlight-io-fullstack-error-correlation-workflow.yml
+  name: Highlight Fullstack Error Correlation
+- type: Arazzo
+  url: arazzo/highlight-io-fullstack-session-correlation-workflow.yml
+  name: Highlight Fullstack Session Correlation
+- type: Arazzo
+  url: arazzo/highlight-io-logs-and-metrics-batch-workflow.yml
+  name: Highlight Logs and Metrics Batch
+- type: Arazzo
+  url: arazzo/highlight-io-session-feedback-capture-workflow.yml
+  name: Highlight Session Feedback Capture
+- type: Arazzo
+  url: arazzo/highlight-io-session-track-event-workflow.yml
+  name: Highlight Session Track Event
 - url: https://www.highlight.io
   type: Portal
 - url: https://www.highlight.io/docs
@@ -207,7 +194,7 @@ common:
   type: GettingStarted
 - url: https://app.highlight.io/sign_up
   name: Highlight App Sign-Up
-  type: SignUp
+  type: Signup
 - url: https://app.highlight.io
   name: Highlight App
   type: Portal
@@ -228,10 +215,10 @@ common:
   type: StatusPage
 - url: https://www.highlight.io/community
   name: Community
-  type: Forum
+  type: Forums
 - url: https://discord.gg/yxaXEAqgwN
   name: Discord
-  type: Forum
+  type: Forums
 - url: https://github.com/highlight/highlight
   name: Highlight GitHub Repository
   type: SourceCode
@@ -261,67 +248,67 @@ common:
   type: PrivacyPolicy
 - url: https://www.highlight.io/docs/general/company/general/roadmap
   name: Roadmap
-  type: Roadmap
+  type: RoadMap
 - url: https://www.highlight.io/docs/general/company/open-source/contributing
   name: Contributing Guide
   type: Documentation
 - url: https://www.highlight.io/docs/sdk/highlightrun
   name: highlight.run (Browser SDK)
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/highlight.run
   name: highlight.run on npm
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/node
   name: '@highlight-run/node'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/next
   name: '@highlight-run/next'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/nest
   name: '@highlight-run/nest'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/react
   name: '@highlight-run/react'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/remix
   name: '@highlight-run/remix'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/sveltekit
   name: '@highlight-run/sveltekit'
-  type: SDK
+  type: SDKs
 - url: https://www.npmjs.com/package/@highlight-run/cloudflare
   name: '@highlight-run/cloudflare'
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-go
   name: Go SDK
-  type: SDK
+  type: SDKs
 - url: https://pypi.org/project/highlight-io/
   name: Python SDK
-  type: SDK
+  type: SDKs
 - url: https://rubygems.org/gems/highlight_io
   name: Ruby SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-rust
   name: Rust SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-elixir
   name: Elixir SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-java
   name: Java SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight-php
   name: PHP SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-dotnet
   name: .NET SDK
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-react-native
   name: React Native SDK (beta)
-  type: SDK
+  type: SDKs
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-electron
   name: Electron SDK
-  type: SDK
+  type: SDKs
 - url: openapi/highlight-otlp-traces-api-openapi.yml
   name: OTLP Traces OpenAPI
   type: OpenAPI

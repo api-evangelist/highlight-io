@@ -5,7 +5,7 @@
       "source": "https://www.highlight.io/blog/rss.xml",
       "feed_url": "https://www.highlight.io/blog/rss.xml",
       "title": "",
-      "saved": 40,
+      "saved": 0,
       "method": "feed"
     },
     {
@@ -13,6 +13,6 @@
       "error": "IncompleteRead"
     }
   ],
-  "post_count": 68,
-  "fetched": "2026-06-14T20:42:17Z"
+  "post_count": 112,
+  "fetched": "2026-06-27T12:03:07Z"
 }
