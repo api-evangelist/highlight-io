@@ -152,6 +152,8 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.j
 access: 3rd-Party
 x-type: company
 common:
+- type: DomainSecurity
+  url: security/highlight-io-domain-security.yml
 - type: PostmanWorkspace
   url: https://www.postman.com/kinlaneapi/highlight-highlightio/overview
 - type: Arazzo
