@@ -1,12 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Highlight Webhooks API
-  description: >
-    Outbound webhook callbacks fired when a Highlight alert (Error, Session,
-    User, Log, Trace, or Metric monitor) matches. Customers register a
-    webhook destination URL on an alert; Highlight POSTs the alert payload as
-    JSON. This is the receiver-side contract — the customer's HTTP endpoint
-    must implement `POST /` and acknowledge with `2xx`.
+  title: Highlight OTLP Logs Webhooks API
+  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
+
+    '
   version: '1.0'
   contact:
     name: Highlight Support
@@ -15,22 +12,23 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
-  - url: https://example.com
-    description: Customer-supplied webhook destination URL
+- url: https://otel.highlight.io
+  description: Highlight hosted OTLP collector
+- url: http://localhost:4318
+  description: Self-hosted OTLP collector (Hobby / Enterprise)
 tags:
-  - name: Webhooks
-    description: Inbound webhook delivery from Highlight
+- name: Webhooks
+  description: Inbound webhook delivery from Highlight
 paths:
   /:
     post:
       summary: Receive Highlight Alert Webhook
-      description: >
-        Delivered when an alert subscription matches. The customer endpoint
-        should validate the optional shared-secret header (planned) and respond
-        with `2xx` within 10 seconds to avoid retries.
+      description: 'Delivered when an alert subscription matches. The customer endpoint should validate the optional shared-secret header (planned) and respond with `2xx` within 10 seconds to avoid retries.
+
+        '
       operationId: receiveHighlightAlertWebhook
       tags:
-        - Webhooks
+      - Webhooks
       requestBody:
         required: true
         content:
@@ -42,35 +40,36 @@ paths:
           description: Webhook acknowledged.
         '202':
           description: Webhook accepted for asynchronous processing.
-        '4XX':
+        4XX:
           description: Webhook rejected.
-        '5XX':
+        5XX:
           description: Receiver error; Highlight will retry per its delivery policy.
 components:
   schemas:
     AlertWebhookPayload:
       type: object
-      description: >
-        Payload sent for alert webhook deliveries.
+      description: 'Payload sent for alert webhook deliveries.
+
+        '
       required:
-        - Event
-        - AlertName
-        - ProjectID
+      - Event
+      - AlertName
+      - ProjectID
       properties:
         Event:
           type: string
           description: Alert event type.
           enum:
-            - ERRORS_ALERT
-            - NEW_USER_ALERT
-            - USER_PROPERTIES_ALERT
-            - TRACK_PROPERTIES_ALERT
-            - SESSION_FEEDBACK_ALERT
-            - NEW_SESSION_ALERT
-            - RAGE_CLICK_ALERT
-            - METRIC_MONITOR
-            - LOG_ALERT
-            - TRACE_ALERT
+          - ERRORS_ALERT
+          - NEW_USER_ALERT
+          - USER_PROPERTIES_ALERT
+          - TRACK_PROPERTIES_ALERT
+          - SESSION_FEEDBACK_ALERT
+          - NEW_SESSION_ALERT
+          - RAGE_CLICK_ALERT
+          - METRIC_MONITOR
+          - LOG_ALERT
+          - TRACE_ALERT
         AlertName:
           type: string
           description: Human-readable alert name.
@@ -90,7 +89,7 @@ components:
           description: Alert threshold count.
         ErrorTitle:
           type: string
-          description: 'Present on ERRORS_ALERT events.'
+          description: Present on ERRORS_ALERT events.
         ErrorURL:
           type: string
           format: uri

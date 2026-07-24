@@ -1,0 +1,88 @@
+openapi: 3.1.0
+info:
+  title: Highlight OTLP Logs Sessions API
+  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
+
+    '
+  version: '1.0'
+  contact:
+    name: Highlight Support
+    url: https://www.highlight.io/community
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: https://otel.highlight.io
+  description: Highlight hosted OTLP collector
+- url: http://localhost:4318
+  description: Self-hosted OTLP collector (Hobby / Enterprise)
+tags:
+- name: Sessions
+  description: Browser session ingestion mutations
+paths:
+  /:
+    post:
+      summary: Execute Public Graph Mutation
+      description: 'Single GraphQL endpoint that accepts the SDK mutations `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, and `markBackendSetup`. Operation is determined by the `operationName` field in the JSON body.
+
+        '
+      operationId: executePublicGraphMutation
+      tags:
+      - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLRequest'
+      responses:
+        '200':
+          description: GraphQL response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLResponse'
+        '400':
+          description: Invalid GraphQL payload.
+        '429':
+          description: Rate limited.
+components:
+  schemas:
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      properties:
+        operationName:
+          type: string
+          description: 'One of `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, `markBackendSetup`.
+
+            '
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties: true
+          description: 'Mutation variables. For `initializeSession` includes `organization_verbose_id`, `enable_strict_privacy`, `client_version`, `firstload_version`, `client_config`, `environment`, `appversion`, `fingerprint`, `client_id`, `network_recording_domains`. For `pushPayload` includes `session_secure_id`, `events`, `messages`, `resources`, `errors`, `payload_id`.
+
+            '
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              path:
+                type: array
+                items:
+                  type: string
+              extensions:
+                type: object
+                additionalProperties: true

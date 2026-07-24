@@ -1,12 +1,10 @@
 openapi: 3.1.0
 info:
-  title: Highlight OTLP Metrics API
-  description: >
-    Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics.
-    Accepts standard `ExportMetricsServiceRequest` payloads including gauges,
-    sums, histograms, and exponential histograms. Metrics drive Highlight
-    dashboards, monitors, and the metrics SQL editor.
-  version: '1.0-beta'
+  title: Highlight OTLP Logs Metrics API
+  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
+
+    '
+  version: '1.0'
   contact:
     name: Highlight Support
     url: https://www.highlight.io/community
@@ -14,23 +12,23 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
-  - url: https://otel.highlight.io
-    description: Highlight hosted OTLP collector
-  - url: http://localhost:4318
-    description: Self-hosted OTLP collector
+- url: https://otel.highlight.io
+  description: Highlight hosted OTLP collector
+- url: http://localhost:4318
+  description: Self-hosted OTLP collector (Hobby / Enterprise)
 tags:
-  - name: Metrics
-    description: OpenTelemetry metric ingestion (beta)
+- name: Metrics
+  description: OpenTelemetry metric ingestion (beta)
 paths:
   /v1/metrics:
     post:
       summary: Export Metrics Service
-      description: >
-        Submit a batch of OpenTelemetry metric data points. Resource attribute
-        `highlight.project_id` is required.
+      description: 'Submit a batch of OpenTelemetry metric data points. Resource attribute `highlight.project_id` is required.
+
+        '
       operationId: exportMetrics
       tags:
-        - Metrics
+      - Metrics
       requestBody:
         required: true
         content:
@@ -54,15 +52,61 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ExportMetricsServiceRequest:
+    ExportMetricsServiceResponse:
       type: object
-      required:
-        - resourceMetrics
       properties:
-        resourceMetrics:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
+    HistogramDataPoint:
+      type: object
+      properties:
+        attributes:
           type: array
           items:
-            $ref: '#/components/schemas/ResourceMetrics'
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        count:
+          type: string
+        sum:
+          type: number
+        bucketCounts:
+          type: array
+          items:
+            type: string
+        explicitBounds:
+          type: array
+          items:
+            type: number
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    NumberDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
     ResourceMetrics:
       type: object
       properties:
@@ -72,13 +116,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScopeMetrics'
-    Resource:
+    ExportMetricsServiceRequest:
       type: object
+      required:
+      - resourceMetrics
       properties:
-        attributes:
+        resourceMetrics:
           type: array
           items:
-            $ref: '#/components/schemas/KeyValue'
+            $ref: '#/components/schemas/ResourceMetrics'
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     ScopeMetrics:
       type: object
       properties:
@@ -95,10 +151,21 @@ components:
           type: string
         version:
           type: string
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
     Metric:
       type: object
       required:
-        - name
+      - name
       properties:
         name:
           type: string
@@ -133,70 +200,3 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
-    NumberDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        asDouble:
-          type: number
-        asInt:
-          type: string
-    HistogramDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        count:
-          type: string
-        sum:
-          type: number
-        bucketCounts:
-          type: array
-          items:
-            type: string
-        explicitBounds:
-          type: array
-          items:
-            type: number
-    KeyValue:
-      type: object
-      required: [key, value]
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
