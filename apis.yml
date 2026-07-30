@@ -1,84 +1,6 @@
 aid: highlight-io
 url: https://raw.githubusercontent.com/api-evangelist/highlight-io/refs/heads/main/apis.yml
 apis:
-- aid: highlight-io:highlight-otlp-traces-api
-  name: Highlight OTLP Traces API
-  tags:
-  - Observability
-  - OpenTelemetry
-  - Traces
-  - Tracing
-  - Distributed Tracing
-  humanURL: https://www.highlight.io/docs/general/product-features/tracing
-  properties:
-  - url: https://www.highlight.io/docs/general/product-features/tracing
-    type: Documentation
-  - url: openapi/highlight-otlp-traces-api-openapi.yml
-    type: OpenAPI
-  - url: json-schema/highlight-trace-schema.json
-    type: JSONSchema
-  description: >-
-    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts standard OTLP
-    `ResourceSpans` payloads at `https://otel.highlight.io/v1/traces`. Spans carry the `highlight.project_id` resource
-    attribute and optional `highlight.session_id` / `highlight.trace_id` so server-side spans correlate with frontend
-    session replay.
-- aid: highlight-io:highlight-otlp-logs-api
-  name: Highlight OTLP Logs API
-  tags:
-  - Observability
-  - OpenTelemetry
-  - Logs
-  - Logging
-  humanURL: https://www.highlight.io/docs/general/product-features/logging
-  properties:
-  - url: https://www.highlight.io/docs/general/product-features/logging
-    type: Documentation
-  - url: openapi/highlight-otlp-logs-api-openapi.yml
-    type: OpenAPI
-  - url: json-schema/highlight-log-schema.json
-    type: JSONSchema
-  description: >-
-    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs at
-    `https://otel.highlight.io/v1/logs`. Supports severity levels, trace/span correlation, and arbitrary attributes.
-    Highlight stores logs in ClickHouse for sub-second full-text search and pattern detection.
-- aid: highlight-io:highlight-otlp-metrics-api
-  name: Highlight OTLP Metrics API
-  tags:
-  - Observability
-  - OpenTelemetry
-  - Metrics
-  - Beta
-  humanURL: https://www.highlight.io/docs/general/product-features/metrics
-  properties:
-  - url: https://www.highlight.io/docs/general/product-features/metrics
-    type: Documentation
-  - url: openapi/highlight-otlp-metrics-api-openapi.yml
-    type: OpenAPI
-  description: >-
-    Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics at
-    `https://otel.highlight.io/v1/metrics`. Accepts gauges, sums, histograms, and exponential histograms and drives
-    Highlight dashboards, alerts, and the metrics SQL editor.
-- aid: highlight-io:highlight-session-ingestion-api
-  name: Highlight Session Ingestion API
-  tags:
-  - Observability
-  - Session Replay
-  - Ingestion
-  - GraphQL
-  humanURL: https://www.highlight.io/docs/general/product-features/session-replay
-  properties:
-  - url: https://www.highlight.io/docs/general/product-features/session-replay
-    type: Documentation
-  - url: openapi/highlight-session-ingestion-api-openapi.yml
-    type: OpenAPI
-  - url: json-schema/highlight-session-schema.json
-    type: JSONSchema
-  - url: graphql/highlight-io-graphql.md
-    type: GraphQL
-  description: >-
-    GraphQL-over-HTTP session replay ingestion endpoint at `https://pub.highlight.io` used by the `highlight.run`
-    browser SDK to upload rrweb DOM snapshots, console/network recording, custom events, identify payloads, and error
-    reports. Public, project-id authenticated, no user secrets required.
 - aid: highlight-io:highlight-private-graphql-api
   name: Highlight Private GraphQL API
   tags:
@@ -93,10 +15,10 @@ apis:
   - url: https://www.highlight.io/docs/general/product-features/general-features/api
     type: Documentation
   description: >-
-    Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list, search, and
-    manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and integrations. Authenticated
-    via dashboard session cookie or workspace admin API token; the schema is open-source under
-    `backend/private-graph/graph` but is not a stable public contract.
+    Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list,
+    search, and manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and integrations.
+    Authenticated via dashboard session cookie or workspace admin API token; the schema is open-source
+    under `backend/private-graph/graph` but is not a stable public contract.
 - aid: highlight-io:highlight-webhooks-api
   name: Highlight Webhooks API
   tags:
@@ -111,9 +33,10 @@ apis:
   - url: openapi/highlight-webhooks-api-openapi.yml
     type: AsyncEvents
   description: >-
-    Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL with alert
-    metadata (name, type, count), error/session/log/metric context, project routing, and action URLs to resolve,
-    ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor alerts.
+    Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL
+    with alert metadata (name, type, count), error/session/log/metric context, project routing, and action
+    URLs to resolve, ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor
+    alerts.
 - aid: highlight-io:highlight-self-hosted-api
   name: Highlight Self-Hosted Deployment
   tags:
@@ -131,10 +54,135 @@ apis:
   - url: https://github.com/highlight/highlight/tree/main/docker
     type: SourceCode
   description: >-
-    Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose), Hobby
-    (single-host Docker for low-volume production), and Enterprise (Kubernetes with horizontal scaling, ClickHouse
-    cluster, and managed retention). All ingestion endpoints (OTLP traces, logs, metrics; pub.highlight.io session
-    ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
+    Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose),
+    Hobby (single-host Docker for low-volume production), and Enterprise (Kubernetes with horizontal scaling,
+    ClickHouse cluster, and managed retention). All ingestion endpoints (OTLP traces, logs, metrics; pub.highlight.io
+    session ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
+- aid: highlight-io:highlight-io-logs-api
+  name: Highlight (highlight.io) Logs API
+  description: OpenTelemetry log ingestion
+  humanURL: https://www.highlight.io/docs/general/product-features/tracing
+  tags:
+  - Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/highlight-io-logs-api-openapi.yml
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/tracing
+  - type: JSONSchema
+    url: json-schema/highlight-trace-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/logging
+  - type: JSONSchema
+    url: json-schema/highlight-log-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/metrics
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/session-replay
+  - type: JSONSchema
+    url: json-schema/highlight-session-schema.json
+  - type: GraphQL
+    url: graphql/highlight-io-graphql.md
+- aid: highlight-io:highlight-io-metrics-api
+  name: Highlight (highlight.io) Metrics API
+  description: OpenTelemetry metric ingestion (beta)
+  humanURL: https://www.highlight.io/docs/general/product-features/tracing
+  tags:
+  - Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/highlight-io-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/tracing
+  - type: JSONSchema
+    url: json-schema/highlight-trace-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/logging
+  - type: JSONSchema
+    url: json-schema/highlight-log-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/metrics
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/session-replay
+  - type: JSONSchema
+    url: json-schema/highlight-session-schema.json
+  - type: GraphQL
+    url: graphql/highlight-io-graphql.md
+- aid: highlight-io:highlight-io-sessions-api
+  name: Highlight (highlight.io) Sessions API
+  description: Browser session ingestion mutations
+  humanURL: https://www.highlight.io/docs/general/product-features/tracing
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/highlight-io-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/tracing
+  - type: JSONSchema
+    url: json-schema/highlight-trace-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/logging
+  - type: JSONSchema
+    url: json-schema/highlight-log-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/metrics
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/session-replay
+  - type: JSONSchema
+    url: json-schema/highlight-session-schema.json
+  - type: GraphQL
+    url: graphql/highlight-io-graphql.md
+- aid: highlight-io:highlight-io-traces-api
+  name: Highlight (highlight.io) Traces API
+  description: OpenTelemetry trace ingestion
+  humanURL: https://www.highlight.io/docs/general/product-features/tracing
+  tags:
+  - Traces
+  properties:
+  - type: OpenAPI
+    url: openapi/highlight-io-traces-api-openapi.yml
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/tracing
+  - type: JSONSchema
+    url: json-schema/highlight-trace-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/logging
+  - type: JSONSchema
+    url: json-schema/highlight-log-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/metrics
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/session-replay
+  - type: JSONSchema
+    url: json-schema/highlight-session-schema.json
+  - type: GraphQL
+    url: graphql/highlight-io-graphql.md
+- aid: highlight-io:highlight-io-webhooks-api
+  name: Highlight (highlight.io) Webhooks API
+  description: Inbound webhook delivery from Highlight
+  humanURL: https://www.highlight.io/docs/general/product-features/tracing
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/highlight-io-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/tracing
+  - type: JSONSchema
+    url: json-schema/highlight-trace-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/logging
+  - type: JSONSchema
+    url: json-schema/highlight-log-schema.json
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/metrics
+  - type: Documentation
+    url: https://www.highlight.io/docs/general/product-features/session-replay
+  - type: JSONSchema
+    url: json-schema/highlight-session-schema.json
+  - type: GraphQL
+    url: graphql/highlight-io-graphql.md
 name: Highlight (highlight.io)
 tags:
 - Observability
@@ -148,7 +196,19 @@ tags:
 - Frontend Monitoring
 - Full Stack Monitoring
 kind: contract
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/highlight-io.png
 access: 3rd-Party
 x-type: company
 common:
