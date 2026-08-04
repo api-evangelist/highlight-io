@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: Highlight OTLP Logs API
+  description: >
+    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured
+    logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in
+    ClickHouse for sub-second full-text search and pattern detection in the
+    Highlight dashboard.
+  version: '1.0'
+  contact:
+    name: Highlight Support
+    url: https://www.highlight.io/community
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://otel.highlight.io
+    description: Highlight hosted OTLP collector
+  - url: http://localhost:4318
+    description: Self-hosted OTLP collector (Hobby / Enterprise)
+tags:
+  - name: Logs
+    description: OpenTelemetry log ingestion
+paths:
+  /v1/logs:
+    post:
+      summary: Export Logs Service
+      description: >
+        Submit a batch of OpenTelemetry log records. The body must be an
+        `ExportLogsServiceRequest` encoded as JSON or Protobuf. The resource
+        attribute `highlight.project_id` is required to route the logs to the
+        owning Highlight project.
+      operationId: exportLogs
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportLogsServiceRequest'
+          application/x-protobuf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Logs accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportLogsServiceResponse'
+        '400':
+          description: Malformed payload or missing `highlight.project_id`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Payload too large.
+        '429':
+          description: Rate limited.
+components:
+  schemas:
+    ExportLogsServiceRequest:
+      type: object
+      required:
+        - resourceLogs
+      properties:
+        resourceLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceLogs'
+    ResourceLogs:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeLogs'
+        schemaUrl:
+          type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: >
+            MUST include `highlight.project_id`. SHOULD include `service.name`,
+            `service.version`, and `deployment.environment`.
+    ScopeLogs:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        logRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogRecord'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    LogRecord:
+      type: object
+      required:
+        - timeUnixNano
+        - body
+      properties:
+        timeUnixNano:
+          type: string
+        observedTimeUnixNano:
+          type: string
+        severityNumber:
+          type: integer
+          description: 1-24 per OpenTelemetry SeverityNumber.
+        severityText:
+          type: string
+          description: 'Human-readable severity (e.g. INFO, WARN, ERROR).'
+        body:
+          $ref: '#/components/schemas/AnyValue'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: >
+            Recommended attributes: `highlight.session_id` and
+            `highlight.trace_id` for browser-session correlation.
+        traceId:
+          type: string
+        spanId:
+          type: string
+    KeyValue:
+      type: object
+      required: [key, value]
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+    ExportLogsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedLogRecords:
+              type: string
+            errorMessage:
+              type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

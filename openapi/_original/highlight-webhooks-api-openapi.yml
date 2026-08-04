@@ -1,0 +1,132 @@
+openapi: 3.1.0
+info:
+  title: Highlight Webhooks API
+  description: >
+    Outbound webhook callbacks fired when a Highlight alert (Error, Session,
+    User, Log, Trace, or Metric monitor) matches. Customers register a
+    webhook destination URL on an alert; Highlight POSTs the alert payload as
+    JSON. This is the receiver-side contract — the customer's HTTP endpoint
+    must implement `POST /` and acknowledge with `2xx`.
+  version: '1.0'
+  contact:
+    name: Highlight Support
+    url: https://www.highlight.io/community
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://example.com
+    description: Customer-supplied webhook destination URL
+tags:
+  - name: Webhooks
+    description: Inbound webhook delivery from Highlight
+paths:
+  /:
+    post:
+      summary: Receive Highlight Alert Webhook
+      description: >
+        Delivered when an alert subscription matches. The customer endpoint
+        should validate the optional shared-secret header (planned) and respond
+        with `2xx` within 10 seconds to avoid retries.
+      operationId: receiveHighlightAlertWebhook
+      tags:
+        - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertWebhookPayload'
+      responses:
+        '200':
+          description: Webhook acknowledged.
+        '202':
+          description: Webhook accepted for asynchronous processing.
+        '4XX':
+          description: Webhook rejected.
+        '5XX':
+          description: Receiver error; Highlight will retry per its delivery policy.
+components:
+  schemas:
+    AlertWebhookPayload:
+      type: object
+      description: >
+        Payload sent for alert webhook deliveries.
+      required:
+        - Event
+        - AlertName
+        - ProjectID
+      properties:
+        Event:
+          type: string
+          description: Alert event type.
+          enum:
+            - ERRORS_ALERT
+            - NEW_USER_ALERT
+            - USER_PROPERTIES_ALERT
+            - TRACK_PROPERTIES_ALERT
+            - SESSION_FEEDBACK_ALERT
+            - NEW_SESSION_ALERT
+            - RAGE_CLICK_ALERT
+            - METRIC_MONITOR
+            - LOG_ALERT
+            - TRACE_ALERT
+        AlertName:
+          type: string
+          description: Human-readable alert name.
+        AlertID:
+          type: integer
+          description: Numeric identifier for the alert subscription.
+        ProjectID:
+          type: integer
+          description: Numeric Highlight project ID.
+        WorkspaceID:
+          type: integer
+        Count:
+          type: integer
+          description: Number of matching errors/sessions in the alert window.
+        Threshold:
+          type: integer
+          description: Alert threshold count.
+        ErrorTitle:
+          type: string
+          description: 'Present on ERRORS_ALERT events.'
+        ErrorURL:
+          type: string
+          format: uri
+        ErrorResolvedURL:
+          type: string
+          format: uri
+          description: Action URL to mark the error resolved.
+        ErrorIgnoredURL:
+          type: string
+          format: uri
+          description: Action URL to ignore the error.
+        ErrorSnoozedURL:
+          type: string
+          format: uri
+          description: Action URL to snooze the error.
+        SessionID:
+          type: string
+        SessionSecureID:
+          type: string
+        SessionURL:
+          type: string
+          format: uri
+        SessionIdentifier:
+          type: string
+          description: Identifier supplied via `H.identify`.
+        UserIdentifier:
+          type: string
+        UserProperties:
+          type: object
+          additionalProperties: true
+        TrackProperties:
+          type: object
+          additionalProperties: true
+        Query:
+          type: string
+          description: Filter expression that triggered the alert.
+        Timestamp:
+          type: string
+          format: date-time

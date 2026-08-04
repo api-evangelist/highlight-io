@@ -1,0 +1,22 @@
+{
+  "provider": "highlight-io",
+  "sources": [
+    "highlight-io-logs-api-openapi.yml",
+    "highlight-io-metrics-api-openapi.yml",
+    "highlight-io-sessions-api-openapi.yml",
+    "highlight-io-traces-api-openapi.yml",
+    "highlight-io-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "highlight-io-logs-api-openapi.yml",
+    "highlight-io-metrics-api-openapi.yml",
+    "highlight-io-sessions-api-openapi.yml",
+    "highlight-io-traces-api-openapi.yml",
+    "highlight-io-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

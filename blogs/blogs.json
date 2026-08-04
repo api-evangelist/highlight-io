@@ -3,13 +3,19 @@
   "feeds": [
     {
       "source": "https://www.highlight.io/blog/rss.xml",
-      "error": "URLError"
+      "feed_url": "https://www.highlight.io/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
     },
     {
       "source": "https://www.highlight.io/blog",
-      "error": "URLError"
+      "feed_url": "https://www.highlight.io/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
     }
   ],
   "post_count": 112,
-  "fetched": "2026-07-11T11:50:51Z"
+  "fetched": "2026-08-01T15:49:00Z"
 }

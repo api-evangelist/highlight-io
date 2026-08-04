@@ -1,0 +1,245 @@
+openapi: 3.1.0
+info:
+  title: Highlight OTLP Traces API
+  description: >
+    Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed
+    traces. Accepts standard OTLP `ExportTraceServiceRequest` payloads. Spans must
+    carry the `highlight.project_id` resource attribute; optional
+    `highlight.session_id` and `highlight.trace_id` enable correlation with the
+    browser session and other backend signals.
+  version: '1.0'
+  contact:
+    name: Highlight Support
+    url: https://www.highlight.io/community
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://otel.highlight.io
+    description: Highlight hosted OTLP collector
+  - url: http://localhost:4318
+    description: Self-hosted OTLP collector (Hobby / Enterprise)
+tags:
+  - name: Traces
+    description: OpenTelemetry trace ingestion
+paths:
+  /v1/traces:
+    post:
+      summary: Export Trace Service
+      description: >
+        Submit a batch of OpenTelemetry spans. The body must be an
+        `ExportTraceServiceRequest` encoded as JSON or Protobuf. The hosted
+        collector strips the `highlight.project_id` resource attribute and routes
+        the spans to the matching Highlight project.
+      operationId: exportTraces
+      tags:
+        - Traces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportTraceServiceRequest'
+          application/x-protobuf:
+            schema:
+              type: string
+              format: binary
+              description: Protobuf-encoded ExportTraceServiceRequest.
+      responses:
+        '200':
+          description: Spans accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportTraceServiceResponse'
+        '400':
+          description: Malformed payload or missing `highlight.project_id`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limited.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ExportTraceServiceRequest:
+      type: object
+      description: OpenTelemetry export envelope for trace data.
+      required:
+        - resourceSpans
+      properties:
+        resourceSpans:
+          type: array
+          description: Resource-scoped spans batched in this export.
+          items:
+            $ref: '#/components/schemas/ResourceSpans'
+    ResourceSpans:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeSpans:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeSpans'
+        schemaUrl:
+          type: string
+    Resource:
+      type: object
+      description: Resource attributes describing the entity emitting the spans.
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: >
+            MUST include `highlight.project_id`. SHOULD include
+            `service.name`, `service.version`, and `deployment.environment`.
+    ScopeSpans:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    Span:
+      type: object
+      required:
+        - traceId
+        - spanId
+        - name
+        - startTimeUnixNano
+        - endTimeUnixNano
+      properties:
+        traceId:
+          type: string
+          description: 16-byte trace identifier encoded as hex.
+        spanId:
+          type: string
+          description: 8-byte span identifier encoded as hex.
+        parentSpanId:
+          type: string
+        name:
+          type: string
+        kind:
+          type: string
+          enum: [SPAN_KIND_UNSPECIFIED, SPAN_KIND_INTERNAL, SPAN_KIND_SERVER, SPAN_KIND_CLIENT, SPAN_KIND_PRODUCER, SPAN_KIND_CONSUMER]
+        startTimeUnixNano:
+          type: string
+          description: Span start time in nanoseconds since UNIX epoch.
+        endTimeUnixNano:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: >
+            Recommended Highlight attributes: `highlight.session_id`,
+            `highlight.trace_id`, `http.method`, `http.url`, `http.status_code`,
+            `db.system`, `db.statement`.
+        status:
+          $ref: '#/components/schemas/Status'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpanEvent'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpanLink'
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum: [STATUS_CODE_UNSET, STATUS_CODE_OK, STATUS_CODE_ERROR]
+    SpanEvent:
+      type: object
+      properties:
+        timeUnixNano:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    SpanLink:
+      type: object
+      properties:
+        traceId:
+          type: string
+        spanId:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    KeyValue:
+      type: object
+      required: [key, value]
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+        arrayValue:
+          type: object
+          properties:
+            values:
+              type: array
+              items:
+                $ref: '#/components/schemas/AnyValue'
+    ExportTraceServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedSpans:
+              type: string
+            errorMessage:
+              type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
