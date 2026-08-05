@@ -31,8 +31,7 @@ concepts:
     aliases: [Organization, Team]
   - id: error-group
     label: Error Group
-    description: A deduplicated cluster of frontend or backend exceptions, grouped by stack-trace fingerprint and
-    enriched with affected-user counts, environments, and resolved/ignored/snoozed state.
+    description: "A deduplicated cluster of frontend or backend exceptions, grouped by stack-trace fingerprint and enriched with affected-user counts, environments, and resolved/ignored/snoozed state."
     aliases: [Issue, Bug]
   - id: log-record
     label: Log Record
