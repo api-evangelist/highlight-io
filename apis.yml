@@ -30,7 +30,7 @@ apis:
   properties:
   - url: https://www.highlight.io/docs/general/product-features/general-features/webhooks
     type: Documentation
-  - url: openapi/highlight-webhooks-api-openapi.yml
+  - url: openapi/_original/highlight-webhooks-api-openapi.yml
     type: AsyncEvents
   description: >-
     Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL
@@ -373,19 +373,19 @@ common:
 - url: https://github.com/highlight/highlight/tree/main/sdk/highlight-electron
   name: Electron SDK
   type: SDKs
-- url: openapi/highlight-otlp-traces-api-openapi.yml
+- url: openapi/_original/highlight-otlp-traces-api-openapi.yml
   name: OTLP Traces OpenAPI
   type: OpenAPI
-- url: openapi/highlight-otlp-logs-api-openapi.yml
+- url: openapi/_original/highlight-otlp-logs-api-openapi.yml
   name: OTLP Logs OpenAPI
   type: OpenAPI
-- url: openapi/highlight-otlp-metrics-api-openapi.yml
+- url: openapi/_original/highlight-otlp-metrics-api-openapi.yml
   name: OTLP Metrics OpenAPI
   type: OpenAPI
-- url: openapi/highlight-session-ingestion-api-openapi.yml
+- url: openapi/_original/highlight-session-ingestion-api-openapi.yml
   name: Session Ingestion OpenAPI
   type: OpenAPI
-- url: openapi/highlight-webhooks-api-openapi.yml
+- url: openapi/_original/highlight-webhooks-api-openapi.yml
   name: Webhooks OpenAPI
   type: OpenAPI
 - url: plans/highlight-io-plans-pricing.yml
