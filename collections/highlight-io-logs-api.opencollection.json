@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Highlight OTLP Logs API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Export Logs Service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://otel.highlight.io/v1/logs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of OpenTelemetry log records. The body must be an `ExportLogsServiceRequest` encoded as JSON or Protobuf. The resource attribute `highlight.project_id` is required to route the logs to the owning Highlight project.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

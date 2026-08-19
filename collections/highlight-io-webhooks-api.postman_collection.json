@@ -1,0 +1,224 @@
+{
+  "item": [
+    {
+      "id": "7d030ba8-8259-46d7-8f0b-40572cf3a66b",
+      "name": "Webhooks",
+      "description": {
+        "content": "Inbound webhook delivery from Highlight",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8899782c-c46c-4634-8c71-96fac0762876",
+          "name": "Receive Highlight Alert Webhook",
+          "request": {
+            "name": "Receive Highlight Alert Webhook",
+            "description": {
+              "content": "Delivered when an alert subscription matches. The customer endpoint should validate the optional shared-secret header (planned) and respond with `2xx` within 10 seconds to avoid retries.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Event\": \"<string>\",\n  \"AlertName\": \"<string>\",\n  \"ProjectID\": \"<integer>\",\n  \"AlertID\": \"<integer>\",\n  \"WorkspaceID\": \"<integer>\",\n  \"Count\": \"<integer>\",\n  \"Threshold\": \"<integer>\",\n  \"ErrorTitle\": \"<string>\",\n  \"ErrorURL\": \"<uri>\",\n  \"ErrorResolvedURL\": \"<uri>\",\n  \"ErrorIgnoredURL\": \"<uri>\",\n  \"ErrorSnoozedURL\": \"<uri>\",\n  \"SessionID\": \"<string>\",\n  \"SessionSecureID\": \"<string>\",\n  \"SessionURL\": \"<uri>\",\n  \"SessionIdentifier\": \"<string>\",\n  \"UserIdentifier\": \"<string>\",\n  \"UserProperties\": {\n    \"key_0\": \"string\"\n  },\n  \"TrackProperties\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": 6534.2039206848\n  },\n  \"Query\": \"<string>\",\n  \"Timestamp\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0ce5a183-d951-432c-bb14-23b568c19aba",
+              "name": "Webhook acknowledged.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Event\": \"<string>\",\n  \"AlertName\": \"<string>\",\n  \"ProjectID\": \"<integer>\",\n  \"AlertID\": \"<integer>\",\n  \"WorkspaceID\": \"<integer>\",\n  \"Count\": \"<integer>\",\n  \"Threshold\": \"<integer>\",\n  \"ErrorTitle\": \"<string>\",\n  \"ErrorURL\": \"<uri>\",\n  \"ErrorResolvedURL\": \"<uri>\",\n  \"ErrorIgnoredURL\": \"<uri>\",\n  \"ErrorSnoozedURL\": \"<uri>\",\n  \"SessionID\": \"<string>\",\n  \"SessionSecureID\": \"<string>\",\n  \"SessionURL\": \"<uri>\",\n  \"SessionIdentifier\": \"<string>\",\n  \"UserIdentifier\": \"<string>\",\n  \"UserProperties\": {\n    \"key_0\": 8769\n  },\n  \"TrackProperties\": {\n    \"key_0\": 8934\n  },\n  \"Query\": \"<string>\",\n  \"Timestamp\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7f9a92fb-aad8-45f8-8e17-40bc0f1ec9bd",
+              "name": "Webhook accepted for asynchronous processing.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Event\": \"<string>\",\n  \"AlertName\": \"<string>\",\n  \"ProjectID\": \"<integer>\",\n  \"AlertID\": \"<integer>\",\n  \"WorkspaceID\": \"<integer>\",\n  \"Count\": \"<integer>\",\n  \"Threshold\": \"<integer>\",\n  \"ErrorTitle\": \"<string>\",\n  \"ErrorURL\": \"<uri>\",\n  \"ErrorResolvedURL\": \"<uri>\",\n  \"ErrorIgnoredURL\": \"<uri>\",\n  \"ErrorSnoozedURL\": \"<uri>\",\n  \"SessionID\": \"<string>\",\n  \"SessionSecureID\": \"<string>\",\n  \"SessionURL\": \"<uri>\",\n  \"SessionIdentifier\": \"<string>\",\n  \"UserIdentifier\": \"<string>\",\n  \"UserProperties\": {\n    \"key_0\": 8769\n  },\n  \"TrackProperties\": {\n    \"key_0\": 8934\n  },\n  \"Query\": \"<string>\",\n  \"Timestamp\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "351007c9-ed13-4037-baa1-24eb957b33d6",
+              "name": "Webhook rejected.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Event\": \"<string>\",\n  \"AlertName\": \"<string>\",\n  \"ProjectID\": \"<integer>\",\n  \"AlertID\": \"<integer>\",\n  \"WorkspaceID\": \"<integer>\",\n  \"Count\": \"<integer>\",\n  \"Threshold\": \"<integer>\",\n  \"ErrorTitle\": \"<string>\",\n  \"ErrorURL\": \"<uri>\",\n  \"ErrorResolvedURL\": \"<uri>\",\n  \"ErrorIgnoredURL\": \"<uri>\",\n  \"ErrorSnoozedURL\": \"<uri>\",\n  \"SessionID\": \"<string>\",\n  \"SessionSecureID\": \"<string>\",\n  \"SessionURL\": \"<uri>\",\n  \"SessionIdentifier\": \"<string>\",\n  \"UserIdentifier\": \"<string>\",\n  \"UserProperties\": {\n    \"key_0\": 8769\n  },\n  \"TrackProperties\": {\n    \"key_0\": 8934\n  },\n  \"Query\": \"<string>\",\n  \"Timestamp\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8e3d084f-cfbb-485f-934c-1bb890b75dbe",
+              "name": "Receiver error; Highlight will retry per its delivery policy.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Event\": \"<string>\",\n  \"AlertName\": \"<string>\",\n  \"ProjectID\": \"<integer>\",\n  \"AlertID\": \"<integer>\",\n  \"WorkspaceID\": \"<integer>\",\n  \"Count\": \"<integer>\",\n  \"Threshold\": \"<integer>\",\n  \"ErrorTitle\": \"<string>\",\n  \"ErrorURL\": \"<uri>\",\n  \"ErrorResolvedURL\": \"<uri>\",\n  \"ErrorIgnoredURL\": \"<uri>\",\n  \"ErrorSnoozedURL\": \"<uri>\",\n  \"SessionID\": \"<string>\",\n  \"SessionSecureID\": \"<string>\",\n  \"SessionURL\": \"<uri>\",\n  \"SessionIdentifier\": \"<string>\",\n  \"UserIdentifier\": \"<string>\",\n  \"UserProperties\": {\n    \"key_0\": 8769\n  },\n  \"TrackProperties\": {\n    \"key_0\": 8934\n  },\n  \"Query\": \"<string>\",\n  \"Timestamp\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://otel.highlight.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "40422d5e-17c9-4e4e-89dc-cfcdc50c113a",
+    "name": "Highlight OTLP Logs Webhooks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.\n\n\nContact Support:\n Name: Highlight Support",
+      "type": "text/plain"
+    }
+  }
+}
