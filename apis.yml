@@ -24,6 +24,11 @@ apis:
   name: Highlight Webhooks API
   tags:
   - Observability
+  - Webhook
+  - Alerts
+  - Notification
+  tags_raw:
+  - Observability
   - Webhooks
   - Alerts
   - Notifications
@@ -41,6 +46,12 @@ apis:
 - aid: highlight-io:highlight-self-hosted-api
   name: Highlight Self-Hosted Deployment
   tags:
+  - Observability
+  - Self-Hosted
+  - Open-Source
+  - Docker
+  - Kubernetes
+  tags_raw:
   - Observability
   - Self-Hosted
   - Open Source
@@ -164,6 +175,8 @@ apis:
   description: Inbound webhook delivery from Highlight
   humanURL: https://www.highlight.io/docs/general/product-features/tracing
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -186,6 +199,17 @@ apis:
     url: graphql/highlight-io-graphql.md
 name: Highlight (highlight.io)
 tags:
+- Observability
+- Session Replay
+- Error Monitoring
+- APM
+- Logging
+- Tracing
+- OpenTelemetry
+- Open-Source
+- Frontend Monitoring
+- Full Stack Monitoring
+tags_raw:
 - Observability
 - Session Replay
 - Error Monitoring
