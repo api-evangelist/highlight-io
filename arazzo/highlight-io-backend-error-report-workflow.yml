@@ -14,11 +14,11 @@ info:
     be read and executed without opening the underlying OpenAPI description.
   version: 1.0.0
 sourceDescriptions:
-- name: tracesApi
-  url: ../openapi/highlight-otlp-traces-api-openapi.yml
-  type: openapi
 - name: logsApi
-  url: ../openapi/highlight-otlp-logs-api-openapi.yml
+  url: ../openapi/highlight-io-logs-api-openapi.yml
+  type: openapi
+- name: tracesApi
+  url: ../openapi/highlight-io-traces-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: backend-error-report

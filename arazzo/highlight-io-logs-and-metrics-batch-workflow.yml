@@ -15,10 +15,10 @@ info:
   version: 1.0.0
 sourceDescriptions:
 - name: logsApi
-  url: ../openapi/highlight-otlp-logs-api-openapi.yml
+  url: ../openapi/highlight-io-logs-api-openapi.yml
   type: openapi
 - name: metricsApi
-  url: ../openapi/highlight-otlp-metrics-api-openapi.yml
+  url: ../openapi/highlight-io-metrics-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: logs-and-metrics-batch

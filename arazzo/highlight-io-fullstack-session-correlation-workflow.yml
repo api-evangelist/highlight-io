@@ -15,11 +15,11 @@ info:
     the underlying OpenAPI description.
   version: 1.0.0
 sourceDescriptions:
-- name: sessionIngestionApi
-  url: ../openapi/highlight-session-ingestion-api-openapi.yml
+- name: sessionsApi
+  url: ../openapi/highlight-io-sessions-api-openapi.yml
   type: openapi
 - name: tracesApi
-  url: ../openapi/highlight-otlp-traces-api-openapi.yml
+  url: ../openapi/highlight-io-traces-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: fullstack-session-correlation

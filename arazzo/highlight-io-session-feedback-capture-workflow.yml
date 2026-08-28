@@ -16,8 +16,8 @@ info:
     description.
   version: 1.0.0
 sourceDescriptions:
-- name: sessionIngestionApi
-  url: ../openapi/highlight-session-ingestion-api-openapi.yml
+- name: sessionsApi
+  url: ../openapi/highlight-io-sessions-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: session-feedback-capture
