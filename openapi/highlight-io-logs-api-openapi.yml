@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Highlight OTLP Logs API
   description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
@@ -58,17 +58,6 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ResourceLogs:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeLogs'
-        schemaUrl:
-          type: string
     ScopeLogs:
       type: object
       properties:
@@ -78,16 +67,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LogRecord'
-    Resource:
+    ErrorResponse:
       type: object
       properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
+        code:
+          type: integer
+        message:
+          type: string
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
     LogRecord:
       type: object
       required:
@@ -117,6 +114,34 @@ components:
           type: string
         spanId:
           type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    ResourceLogs:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeLogs'
+        schemaUrl:
+          type: string
     KeyValue:
       type: object
       required:
@@ -127,20 +152,6 @@ components:
           type: string
         value:
           $ref: '#/components/schemas/AnyValue'
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
     ExportLogsServiceResponse:
       type: object
       properties:
@@ -151,17 +162,6 @@ components:
               type: string
             errorMessage:
               type: string
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
     ExportLogsServiceRequest:
       type: object
       required:

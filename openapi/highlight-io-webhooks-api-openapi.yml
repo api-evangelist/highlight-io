@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Highlight OTLP Logs Webhooks API
-  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
+  title: Highlight Webhooks API
+  description: 'Outbound webhook callbacks fired when a Highlight alert (Error, Session, User, Log, Trace, or Metric monitor) matches. Customers register a webhook destination URL on an alert; Highlight POSTs the alert payload as JSON. This is the receiver-side contract — the customer''s HTTP endpoint must implement `POST /` and acknowledge with `2xx`.
 
     '
   version: '1.0'
@@ -12,10 +12,8 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
-- url: https://otel.highlight.io
-  description: Highlight hosted OTLP collector
-- url: http://localhost:4318
-  description: Self-hosted OTLP collector (Hobby / Enterprise)
+- url: https://example.com
+  description: Customer-supplied webhook destination URL
 tags:
 - name: Webhooks
   description: Inbound webhook delivery from Highlight

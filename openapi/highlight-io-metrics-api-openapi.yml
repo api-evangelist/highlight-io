@@ -1,10 +1,10 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Highlight OTLP Logs Metrics API
-  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
+  title: Highlight OTLP Metrics API
+  description: 'Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics. Accepts standard `ExportMetricsServiceRequest` payloads including gauges, sums, histograms, and exponential histograms. Metrics drive Highlight dashboards, monitors, and the metrics SQL editor.
 
     '
-  version: '1.0'
+  version: 1.0-beta
   contact:
     name: Highlight Support
     url: https://www.highlight.io/community
@@ -15,7 +15,7 @@ servers:
 - url: https://otel.highlight.io
   description: Highlight hosted OTLP collector
 - url: http://localhost:4318
-  description: Self-hosted OTLP collector (Hobby / Enterprise)
+  description: Self-hosted OTLP collector
 tags:
 - name: Metrics
   description: OpenTelemetry metric ingestion (beta)
@@ -52,116 +52,6 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
-    HistogramDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        count:
-          type: string
-        sum:
-          type: number
-        bucketCounts:
-          type: array
-          items:
-            type: string
-        explicitBounds:
-          type: array
-          items:
-            type: number
-    Resource:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    NumberDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        asDouble:
-          type: number
-        asInt:
-          type: string
-    ResourceMetrics:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeMetrics'
-    ExportMetricsServiceRequest:
-      type: object
-      required:
-      - resourceMetrics
-      properties:
-        resourceMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceMetrics'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    ScopeMetrics:
-      type: object
-      properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metric'
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
     Metric:
       type: object
       required:
@@ -200,3 +90,113 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
+    HistogramDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        count:
+          type: string
+        sum:
+          type: number
+        bucketCounts:
+          type: array
+          items:
+            type: string
+        explicitBounds:
+          type: array
+          items:
+            type: number
+    ExportMetricsServiceRequest:
+      type: object
+      required:
+      - resourceMetrics
+      properties:
+        resourceMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceMetrics'
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
+    NumberDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
+    ScopeMetrics:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'

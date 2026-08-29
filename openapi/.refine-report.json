@@ -1,22 +1,35 @@
 {
   "provider": "highlight-io",
   "sources": [
-    "highlight-io-logs-api-openapi.yml",
-    "highlight-io-metrics-api-openapi.yml",
-    "highlight-io-sessions-api-openapi.yml",
-    "highlight-io-traces-api-openapi.yml",
-    "highlight-io-webhooks-api-openapi.yml"
+    "_original/highlight-otlp-logs-api-openapi.yml",
+    "_original/highlight-otlp-metrics-api-openapi.yml",
+    "_original/highlight-otlp-traces-api-openapi.yml",
+    "_original/highlight-session-ingestion-api-openapi.yml",
+    "_original/highlight-webhooks-api-openapi.yml"
   ],
   "outputs": [
     "highlight-io-logs-api-openapi.yml",
     "highlight-io-metrics-api-openapi.yml",
-    "highlight-io-sessions-api-openapi.yml",
     "highlight-io-traces-api-openapi.yml",
+    "highlight-io-sessions-api-openapi.yml",
     "highlight-io-webhooks-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (5 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "highlight-otlp-logs-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "highlight-otlp-metrics-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "highlight-otlp-traces-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "highlight-session-ingestion-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "highlight-webhooks-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "highlight-io-logs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "highlight-io-metrics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "highlight-io-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "highlight-io-traces-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "highlight-io-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
