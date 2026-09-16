@@ -28,11 +28,10 @@ apis:
     type: Documentation
   - url: https://www.highlight.io/docs/general/product-features/general-features/api
     type: Documentation
-  description: >-
-    Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list,
-    search, and manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and integrations.
-    Authenticated via dashboard session cookie or workspace admin API token; the schema is open-source
-    under `backend/private-graph/graph` but is not a stable public contract.
+  description: Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`.
+    Used to list, search, and manage workspaces, projects, sessions, errors, logs, traces, dashboards,
+    alerts, and integrations. Authenticated via dashboard session cookie or workspace admin API token;
+    the schema is open-source under `backend/private-graph/graph` but is not a stable public contract.
 - aid: highlight-io:highlight-webhooks-api
   name: Highlight Webhooks API
   tags:
@@ -51,10 +50,9 @@ apis:
     type: Documentation
   - url: openapi/_original/highlight-webhooks-api-openapi.yml
     type: AsyncEvents
-  description: >-
-    Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL
-    with alert metadata (name, type, count), error/session/log/metric context, project routing, and action
-    URLs to resolve, ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor
+  description: Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied
+    URL with alert metadata (name, type, count), error/session/log/metric context, project routing, and
+    action URLs to resolve, ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor
     alerts.
 - aid: highlight-io:highlight-self-hosted-api
   name: Highlight Self-Hosted Deployment
@@ -78,11 +76,11 @@ apis:
     type: Documentation
   - url: https://github.com/highlight/highlight/tree/main/docker
     type: SourceCode
-  description: >-
-    Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose),
-    Hobby (single-host Docker for low-volume production), and Enterprise (Kubernetes with horizontal scaling,
-    ClickHouse cluster, and managed retention). All ingestion endpoints (OTLP traces, logs, metrics; pub.highlight.io
-    session ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
+  description: Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host
+    docker-compose), Hobby (single-host Docker for low-volume production), and Enterprise (Kubernetes
+    with horizontal scaling, ClickHouse cluster, and managed retention). All ingestion endpoints (OTLP
+    traces, logs, metrics; pub.highlight.io session ingestion; pri.highlight.io GraphQL) are reproduced
+    in-cluster.
 - aid: highlight-io:highlight-io-logs-api
   name: Highlight (highlight.io) Logs API
   description: OpenTelemetry log ingestion
@@ -183,33 +181,6 @@ apis:
     url: json-schema/highlight-session-schema.json
   - type: GraphQL
     url: graphql/highlight-io-graphql.md
-- aid: highlight-io:highlight-io-webhooks-api
-  name: Highlight (highlight.io) Webhooks API
-  description: Inbound webhook delivery from Highlight
-  humanURL: https://www.highlight.io/docs/general/product-features/tracing
-  tags:
-  - Webhook
-  tags_raw:
-  - Webhooks
-  properties:
-  - type: OpenAPI
-    url: openapi/highlight-io-webhooks-api-openapi.yml
-  - type: Documentation
-    url: https://www.highlight.io/docs/general/product-features/tracing
-  - type: JSONSchema
-    url: json-schema/highlight-trace-schema.json
-  - type: Documentation
-    url: https://www.highlight.io/docs/general/product-features/logging
-  - type: JSONSchema
-    url: json-schema/highlight-log-schema.json
-  - type: Documentation
-    url: https://www.highlight.io/docs/general/product-features/metrics
-  - type: Documentation
-    url: https://www.highlight.io/docs/general/product-features/session-replay
-  - type: JSONSchema
-    url: json-schema/highlight-session-schema.json
-  - type: GraphQL
-    url: graphql/highlight-io-graphql.md
 name: Highlight (highlight.io)
 tags:
 - Observability
@@ -250,6 +221,8 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/highlight-
 access: 3rd-Party
 x-type: company
 common:
+- type: Website
+  url: https://highlight.io
 - type: AgenticAccess
   url: agentic-access/highlight-io-agentic-access.yml
 - type: DomainSecurity
@@ -455,15 +428,13 @@ common:
   - Frontend correlation — server spans/logs join the originating browser session via highlight.session_id
   - AI-generated session insights and weekly digests
   - Webhook destinations for alerts (Error, Session, User, Log, Trace, Metric monitors)
-  - >-
-    25+ first-party integrations including Slack, Discord, Microsoft Teams, GitHub, Jira, Linear, ClickUp, Vercel,
-    LaunchDarkly, Grafana, Amplitude, Mixpanel, Segment
+  - 25+ first-party integrations including Slack, Discord, Microsoft Teams, GitHub, Jira, Linear, ClickUp,
+    Vercel, LaunchDarkly, Grafana, Amplitude, Mixpanel, Segment
   - Browser SDKs for React, Next.js, Remix, Vue, Angular, Gatsby, SvelteKit, Electron, React Native (beta)
   - Server SDKs for Node.js, Python, Go, Ruby, Rust, Elixir, Java, PHP, C# .NET
   - Hosting provider SDKs for AWS Lambda, Cloudflare Workers, Vercel, Firebase, Azure Functions, GCP
   - Privacy controls (`privacySetting: strict | default | none`) with PII redaction
-  - >-
-    100% open source under Apache 2.0 (with separate commercial license for `highlight.io/` and `enterprise/`
+  - 100% open source under Apache 2.0 (with separate commercial license for `highlight.io/` and `enterprise/`
     directories)
   - Self-hostable in three tiers — Dev (docker-compose), Hobby (single-host Docker), Enterprise (Kubernetes)
   - Powered by ClickHouse, Kafka, OpenTelemetry Collector, and Postgres
@@ -476,15 +447,14 @@ common:
   - https://github.com/highlight/highlight
   updated: '2026-05-25'
 created: '2026-05-25T00:00:00.000Z'
-modified: '2026-05-25'
+modified: '2026-09-16'
 position: Consuming
-description: >-
-  Highlight (highlight.io) is the open-source, full-stack monitoring platform — session replay, error monitoring,
-  logging, distributed tracing, and metrics in a single tool. Built on OpenTelemetry, rrweb, and ClickHouse, Highlight
-  correlates server-side spans and logs back to the originating browser session so engineers can move from a customer
-  report to the exact line of code in one click. Available as a hosted SaaS on three commercial tiers (Free /
-  Pay-as-you-go / Business / Enterprise) and as a fully open-source self-hosted deployment (Dev / Hobby / Enterprise)
-  under Apache 2.0.
+description: Highlight (highlight.io) is the open-source, full-stack monitoring platform — session replay,
+  error monitoring, logging, distributed tracing, and metrics in a single tool. Built on OpenTelemetry,
+  rrweb, and ClickHouse, Highlight correlates server-side spans and logs back to the originating browser
+  session so engineers can move from a customer report to the exact line of code in one click. Available
+  as a hosted SaaS on three commercial tiers (Free / Pay-as-you-go / Business / Enterprise) and as a fully
+  open-source self-hosted deployment (Dev / Hobby / Enterprise) under Apache 2.0.
 maintainers:
 - FN: Kin Lane
   email: info@apievangelist.com
