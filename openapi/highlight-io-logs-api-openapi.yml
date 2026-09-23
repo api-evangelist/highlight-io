@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Highlight OTLP Logs API
-  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
-
-    '
+  description: Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs. Accepts standard `ExportLogsServiceRequest` payloads. Logs are stored in ClickHouse for sub-second full-text search and pattern detection in the Highlight dashboard.
   version: '1.0'
   contact:
     name: Highlight Support
@@ -23,9 +21,7 @@ paths:
   /v1/logs:
     post:
       summary: Export Logs Service
-      description: 'Submit a batch of OpenTelemetry log records. The body must be an `ExportLogsServiceRequest` encoded as JSON or Protobuf. The resource attribute `highlight.project_id` is required to route the logs to the owning Highlight project.
-
-        '
+      description: Submit a batch of OpenTelemetry log records. The body must be an `ExportLogsServiceRequest` encoded as JSON or Protobuf. The resource attribute `highlight.project_id` is required to route the logs to the owning Highlight project.
       operationId: exportLogs
       tags:
       - Logs
@@ -58,33 +54,23 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ScopeLogs:
+    ExportLogsServiceResponse:
       type: object
       properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        logRecords:
-          type: array
-          items:
-            $ref: '#/components/schemas/LogRecord'
-    ErrorResponse:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedLogRecords:
+              type: string
+            errorMessage:
+              type: string
+    InstrumentationScope:
       type: object
       properties:
-        code:
-          type: integer
-        message:
+        name:
           type: string
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
+        version:
           type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
     LogRecord:
       type: object
       required:
@@ -114,23 +100,25 @@ components:
           type: string
         spanId:
           type: string
-    Resource:
+    ScopeLogs:
       type: object
       properties:
-        attributes:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        logRecords:
           type: array
           items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
-    InstrumentationScope:
+            $ref: '#/components/schemas/LogRecord'
+    KeyValue:
       type: object
+      required:
+      - key
+      - value
       properties:
-        name:
+        key:
           type: string
-        version:
-          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     ResourceLogs:
       type: object
       properties:
@@ -142,26 +130,17 @@ components:
             $ref: '#/components/schemas/ScopeLogs'
         schemaUrl:
           type: string
-    KeyValue:
+    AnyValue:
       type: object
-      required:
-      - key
-      - value
       properties:
-        key:
+        stringValue:
           type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    ExportLogsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedLogRecords:
-              type: string
-            errorMessage:
-              type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
     ExportLogsServiceRequest:
       type: object
       required:
@@ -171,3 +150,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceLogs'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '

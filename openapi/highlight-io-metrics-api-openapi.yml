@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Highlight OTLP Metrics API
-  description: 'Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics. Accepts standard `ExportMetricsServiceRequest` payloads including gauges, sums, histograms, and exponential histograms. Metrics drive Highlight dashboards, monitors, and the metrics SQL editor.
-
-    '
+  description: Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics. Accepts standard `ExportMetricsServiceRequest` payloads including gauges, sums, histograms, and exponential histograms. Metrics drive Highlight dashboards, monitors, and the metrics SQL editor.
   version: 1.0-beta
   contact:
     name: Highlight Support
@@ -23,9 +21,7 @@ paths:
   /v1/metrics:
     post:
       summary: Export Metrics Service
-      description: 'Submit a batch of OpenTelemetry metric data points. Resource attribute `highlight.project_id` is required.
-
-        '
+      description: Submit a batch of OpenTelemetry metric data points. Resource attribute `highlight.project_id` is required.
       operationId: exportMetrics
       tags:
       - Metrics
@@ -52,6 +48,13 @@ paths:
           description: Rate limited.
 components:
   schemas:
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
     Metric:
       type: object
       required:
@@ -90,6 +93,31 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
+    NumberDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     HistogramDataPoint:
       type: object
       properties:
@@ -113,6 +141,34 @@ components:
           type: array
           items:
             type: number
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
+    ScopeMetrics:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
     ExportMetricsServiceRequest:
       type: object
       required:
@@ -133,13 +189,6 @@ components:
           type: string
         doubleValue:
           type: number
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
     Resource:
       type: object
       properties:
@@ -147,56 +196,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/KeyValue'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
-    ResourceMetrics:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeMetrics'
-    NumberDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        asDouble:
-          type: number
-        asInt:
-          type: string
-    ScopeMetrics:
-      type: object
-      properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metric'

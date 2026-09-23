@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Highlight OTLP Traces API
-  description: 'Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts standard OTLP `ExportTraceServiceRequest` payloads. Spans must carry the `highlight.project_id` resource attribute; optional `highlight.session_id` and `highlight.trace_id` enable correlation with the browser session and other backend signals.
-
-    '
+  description: Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts standard OTLP `ExportTraceServiceRequest` payloads. Spans must carry the `highlight.project_id` resource attribute; optional `highlight.session_id` and `highlight.trace_id` enable correlation with the browser session and other backend signals.
   version: '1.0'
   contact:
     name: Highlight Support
@@ -23,9 +21,7 @@ paths:
   /v1/traces:
     post:
       summary: Export Trace Service
-      description: 'Submit a batch of OpenTelemetry spans. The body must be an `ExportTraceServiceRequest` encoded as JSON or Protobuf. The hosted collector strips the `highlight.project_id` resource attribute and routes the spans to the matching Highlight project.
-
-        '
+      description: Submit a batch of OpenTelemetry spans. The body must be an `ExportTraceServiceRequest` encoded as JSON or Protobuf. The hosted collector strips the `highlight.project_id` resource attribute and routes the spans to the matching Highlight project.
       operationId: exportTraces
       tags:
       - Traces
@@ -67,17 +63,13 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    ErrorResponse:
+    InstrumentationScope:
       type: object
       properties:
-        code:
-          type: integer
-        message:
+        name:
           type: string
-        details:
-          type: array
-          items:
-            type: object
+        version:
+          type: string
     ExportTraceServiceRequest:
       type: object
       description: OpenTelemetry export envelope for trace data.
@@ -89,74 +81,6 @@ components:
           description: Resource-scoped spans batched in this export.
           items:
             $ref: '#/components/schemas/ResourceSpans'
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-        arrayValue:
-          type: object
-          properties:
-            values:
-              type: array
-              items:
-                $ref: '#/components/schemas/AnyValue'
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-    Resource:
-      type: object
-      description: Resource attributes describing the entity emitting the spans.
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
-    SpanEvent:
-      type: object
-      properties:
-        timeUnixNano:
-          type: string
-        name:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    SpanLink:
-      type: object
-      properties:
-        traceId:
-          type: string
-        spanId:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
     ExportTraceServiceResponse:
       type: object
       properties:
@@ -167,6 +91,16 @@ components:
               type: string
             errorMessage:
               type: string
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     Span:
       type: object
       required:
@@ -217,17 +151,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SpanLink'
-    Status:
+    AnyValue:
       type: object
       properties:
-        message:
+        stringValue:
           type: string
-        code:
+        boolValue:
+          type: boolean
+        intValue:
           type: string
-          enum:
-          - STATUS_CODE_UNSET
-          - STATUS_CODE_OK
-          - STATUS_CODE_ERROR
+        doubleValue:
+          type: number
+        arrayValue:
+          type: object
+          properties:
+            values:
+              type: array
+              items:
+                $ref: '#/components/schemas/AnyValue'
     ResourceSpans:
       type: object
       properties:
@@ -239,6 +180,39 @@ components:
             $ref: '#/components/schemas/ScopeSpans'
         schemaUrl:
           type: string
+    SpanEvent:
+      type: object
+      properties:
+        timeUnixNano:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum:
+          - STATUS_CODE_UNSET
+          - STATUS_CODE_OK
+          - STATUS_CODE_ERROR
+    SpanLink:
+      type: object
+      properties:
+        traceId:
+          type: string
+        spanId:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
     ScopeSpans:
       type: object
       properties:
@@ -248,3 +222,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Span'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+    Resource:
+      type: object
+      description: Resource attributes describing the entity emitting the spans.
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
