@@ -48,6 +48,15 @@ paths:
           description: Rate limited.
 components:
   schemas:
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
     InstrumentationScope:
       type: object
       properties:
@@ -55,6 +64,24 @@ components:
           type: string
         version:
           type: string
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
     Metric:
       type: object
       required:
@@ -118,6 +145,25 @@ components:
           type: string
         value:
           $ref: '#/components/schemas/AnyValue'
+    ScopeMetrics:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
     HistogramDataPoint:
       type: object
       properties:
@@ -141,34 +187,6 @@ components:
           type: array
           items:
             type: number
-    ResourceMetrics:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeMetrics'
-    ScopeMetrics:
-      type: object
-      properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metric'
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
     ExportMetricsServiceRequest:
       type: object
       required:
@@ -178,21 +196,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceMetrics'
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-    Resource:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'

@@ -63,6 +63,17 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
     InstrumentationScope:
       type: object
       properties:
@@ -70,6 +81,87 @@ components:
           type: string
         version:
           type: string
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+        arrayValue:
+          type: object
+          properties:
+            values:
+              type: array
+              items:
+                $ref: '#/components/schemas/AnyValue'
+    Resource:
+      type: object
+      description: Resource attributes describing the entity emitting the spans.
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
+    SpanEvent:
+      type: object
+      properties:
+        timeUnixNano:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum:
+          - STATUS_CODE_UNSET
+          - STATUS_CODE_OK
+          - STATUS_CODE_ERROR
+    ResourceSpans:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeSpans:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeSpans'
+        schemaUrl:
+          type: string
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    ScopeSpans:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
     ExportTraceServiceRequest:
       type: object
       description: OpenTelemetry export envelope for trace data.
@@ -81,26 +173,17 @@ components:
           description: Resource-scoped spans batched in this export.
           items:
             $ref: '#/components/schemas/ResourceSpans'
-    ExportTraceServiceResponse:
+    SpanLink:
       type: object
       properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedSpans:
-              type: string
-            errorMessage:
-              type: string
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
+        traceId:
           type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
+        spanId:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
     Span:
       type: object
       required:
@@ -151,96 +234,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SpanLink'
-    AnyValue:
+    ExportTraceServiceResponse:
       type: object
       properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-        arrayValue:
+        partialSuccess:
           type: object
           properties:
-            values:
-              type: array
-              items:
-                $ref: '#/components/schemas/AnyValue'
-    ResourceSpans:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeSpans:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeSpans'
-        schemaUrl:
-          type: string
-    SpanEvent:
-      type: object
-      properties:
-        timeUnixNano:
-          type: string
-        name:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    Status:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-          enum:
-          - STATUS_CODE_UNSET
-          - STATUS_CODE_OK
-          - STATUS_CODE_ERROR
-    SpanLink:
-      type: object
-      properties:
-        traceId:
-          type: string
-        spanId:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    ScopeSpans:
-      type: object
-      properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        spans:
-          type: array
-          items:
-            $ref: '#/components/schemas/Span'
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
-    Resource:
-      type: object
-      description: Resource attributes describing the entity emitting the spans.
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
+            rejectedSpans:
+              type: string
+            errorMessage:
+              type: string

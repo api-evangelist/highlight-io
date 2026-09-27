@@ -1,17 +1,20 @@
 aid: highlight-io
 url: https://raw.githubusercontent.com/api-evangelist/highlight-io/refs/heads/main/apis.yml
 deliveryModel:
-  model: unknown
+  model: saas
+  license_evidence:
+    not_product:
+    - highlight/highlight
   open_source: unknown
   commercial: true
   callable_host: true
-  label: Delivery model not determined — needs a product licence on record
+  label: Hosted service · you call their endpoint
   confidence: low
   source:
   - openapi
   - pricing
-  - repository-unlicensed
-  generated: '2026-08-28'
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 specificationVersion: '0.23'
 apis:
@@ -59,7 +62,7 @@ apis:
   tags:
   - Observability
   - Self-Hosted
-  - Open-Source
+  - Open Source
   - Docker
   - Kubernetes
   tags_raw:
@@ -68,6 +71,7 @@ apis:
   - Open Source
   - Docker
   - Kubernetes
+  - Open-Source
   humanURL: https://www.highlight.io/docs/general/company/open-source/self-host-hobby
   properties:
   - url: https://www.highlight.io/docs/general/company/open-source/self-host-hobby
@@ -190,7 +194,7 @@ tags:
 - Logging
 - Tracing
 - OpenTelemetry
-- Open-Source
+- Open Source
 - Frontend Monitoring
 - Full Stack Monitoring
 tags_raw:
@@ -204,6 +208,7 @@ tags_raw:
 - Open Source
 - Frontend Monitoring
 - Full Stack Monitoring
+- Open-Source
 kind: contract
 accessModel:
   pricing: freemium
