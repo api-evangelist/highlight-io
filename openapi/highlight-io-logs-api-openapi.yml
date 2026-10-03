@@ -54,20 +54,26 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ErrorResponse:
+    Resource:
       type: object
       properties:
-        code:
-          type: integer
-        message:
-          type: string
-    InstrumentationScope:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
+    KeyValue:
       type: object
+      required:
+      - key
+      - value
       properties:
-        name:
+        key:
           type: string
-        version:
-          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     AnyValue:
       type: object
       properties:
@@ -79,16 +85,6 @@ components:
           type: string
         doubleValue:
           type: number
-    Resource:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
     ScopeLogs:
       type: object
       properties:
@@ -98,6 +94,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LogRecord'
+    ResourceLogs:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeLogs'
+        schemaUrl:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     ExportLogsServiceResponse:
       type: object
       properties:
@@ -108,25 +122,6 @@ components:
               type: string
             errorMessage:
               type: string
-    ExportLogsServiceRequest:
-      type: object
-      required:
-      - resourceLogs
-      properties:
-        resourceLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceLogs'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
     LogRecord:
       type: object
       required:
@@ -156,14 +151,19 @@ components:
           type: string
         spanId:
           type: string
-    ResourceLogs:
+    InstrumentationScope:
       type: object
       properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeLogs:
+        name:
+          type: string
+        version:
+          type: string
+    ExportLogsServiceRequest:
+      type: object
+      required:
+      - resourceLogs
+      properties:
+        resourceLogs:
           type: array
           items:
-            $ref: '#/components/schemas/ScopeLogs'
-        schemaUrl:
-          type: string
+            $ref: '#/components/schemas/ResourceLogs'

@@ -44,6 +44,24 @@ paths:
           description: Rate limited.
 components:
   schemas:
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      properties:
+        operationName:
+          type: string
+          description: 'One of `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, `markBackendSetup`.
+
+            '
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties: true
+          description: 'Mutation variables. For `initializeSession` includes `organization_verbose_id`, `enable_strict_privacy`, `client_version`, `firstload_version`, `client_config`, `environment`, `appversion`, `fingerprint`, `client_id`, `network_recording_domains`. For `pushPayload` includes `session_secure_id`, `events`, `messages`, `resources`, `errors`, `payload_id`.
+
+            '
     GraphQLResponse:
       type: object
       properties:
@@ -64,21 +82,3 @@ components:
               extensions:
                 type: object
                 additionalProperties: true
-    GraphQLRequest:
-      type: object
-      required:
-      - query
-      properties:
-        operationName:
-          type: string
-          description: 'One of `initializeSession`, `pushPayload`, `identifySession`, `addSessionFeedback`, `addSessionProperties`, `addTrackProperties`, `pushBackendPayload`, `markBackendSetup`.
-
-            '
-        query:
-          type: string
-        variables:
-          type: object
-          additionalProperties: true
-          description: 'Mutation variables. For `initializeSession` includes `organization_verbose_id`, `enable_strict_privacy`, `client_version`, `firstload_version`, `client_config`, `environment`, `appversion`, `fingerprint`, `client_id`, `network_recording_domains`. For `pushPayload` includes `session_secure_id`, `events`, `messages`, `resources`, `errors`, `payload_id`.
-
-            '

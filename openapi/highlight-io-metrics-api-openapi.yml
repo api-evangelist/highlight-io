@@ -48,22 +48,23 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    ResourceMetrics:
+    Resource:
       type: object
       properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeMetrics:
+        attributes:
           type: array
           items:
-            $ref: '#/components/schemas/ScopeMetrics'
-    InstrumentationScope:
+            $ref: '#/components/schemas/KeyValue'
+    KeyValue:
       type: object
+      required:
+      - key
+      - value
       properties:
-        name:
+        key:
           type: string
-        version:
-          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     AnyValue:
       type: object
       properties:
@@ -75,13 +76,30 @@ components:
           type: string
         doubleValue:
           type: number
-    Resource:
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
+    NumberDataPoint:
       type: object
       properties:
         attributes:
           type: array
           items:
             $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
     Metric:
       type: object
       required:
@@ -120,31 +138,22 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
-    NumberDataPoint:
+    InstrumentationScope:
       type: object
       properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
+        name:
           type: string
-        timeUnixNano:
+        version:
           type: string
-        asDouble:
-          type: number
-        asInt:
-          type: string
-    KeyValue:
+    ExportMetricsServiceRequest:
       type: object
       required:
-      - key
-      - value
+      - resourceMetrics
       properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
+        resourceMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceMetrics'
     ScopeMetrics:
       type: object
       properties:
@@ -187,12 +196,3 @@ components:
           type: array
           items:
             type: number
-    ExportMetricsServiceRequest:
-      type: object
-      required:
-      - resourceMetrics
-      properties:
-        resourceMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceMetrics'
