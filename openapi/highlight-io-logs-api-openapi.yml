@@ -54,26 +54,22 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    Resource:
+    InstrumentationScope:
       type: object
       properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
-    KeyValue:
+        name:
+          type: string
+        version:
+          type: string
+    ExportLogsServiceRequest:
       type: object
       required:
-      - key
-      - value
+      - resourceLogs
       properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
+        resourceLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceLogs'
     AnyValue:
       type: object
       properties:
@@ -85,43 +81,6 @@ components:
           type: string
         doubleValue:
           type: number
-    ScopeLogs:
-      type: object
-      properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        logRecords:
-          type: array
-          items:
-            $ref: '#/components/schemas/LogRecord'
-    ResourceLogs:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeLogs'
-        schemaUrl:
-          type: string
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    ExportLogsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedLogRecords:
-              type: string
-            errorMessage:
-              type: string
     LogRecord:
       type: object
       required:
@@ -151,19 +110,60 @@ components:
           type: string
         spanId:
           type: string
-    InstrumentationScope:
+    ScopeLogs:
       type: object
       properties:
-        name:
-          type: string
-        version:
-          type: string
-    ExportLogsServiceRequest:
-      type: object
-      required:
-      - resourceLogs
-      properties:
-        resourceLogs:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        logRecords:
           type: array
           items:
-            $ref: '#/components/schemas/ResourceLogs'
+            $ref: '#/components/schemas/LogRecord'
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    ExportLogsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedLogRecords:
+              type: string
+            errorMessage:
+              type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    ResourceLogs:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeLogs'
+        schemaUrl:
+          type: string

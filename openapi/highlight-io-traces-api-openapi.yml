@@ -63,78 +63,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    Resource:
-      type: object
-      description: Resource attributes describing the entity emitting the spans.
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    ExportTraceServiceRequest:
-      type: object
-      description: OpenTelemetry export envelope for trace data.
-      required:
-      - resourceSpans
-      properties:
-        resourceSpans:
-          type: array
-          description: Resource-scoped spans batched in this export.
-          items:
-            $ref: '#/components/schemas/ResourceSpans'
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-        arrayValue:
-          type: object
-          properties:
-            values:
-              type: array
-              items:
-                $ref: '#/components/schemas/AnyValue'
-    SpanLink:
-      type: object
-      properties:
-        traceId:
-          type: string
-        spanId:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
     Span:
       type: object
       required:
@@ -185,17 +113,64 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SpanLink'
-    Status:
+    ExportTraceServiceRequest:
+      type: object
+      description: OpenTelemetry export envelope for trace data.
+      required:
+      - resourceSpans
+      properties:
+        resourceSpans:
+          type: array
+          description: Resource-scoped spans batched in this export.
+          items:
+            $ref: '#/components/schemas/ResourceSpans'
+    AnyValue:
       type: object
       properties:
-        message:
+        stringValue:
           type: string
-        code:
+        boolValue:
+          type: boolean
+        intValue:
           type: string
-          enum:
-          - STATUS_CODE_UNSET
-          - STATUS_CODE_OK
-          - STATUS_CODE_ERROR
+        doubleValue:
+          type: number
+        arrayValue:
+          type: object
+          properties:
+            values:
+              type: array
+              items:
+                $ref: '#/components/schemas/AnyValue'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    SpanLink:
+      type: object
+      properties:
+        traceId:
+          type: string
+        spanId:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    Resource:
+      type: object
+      description: Resource attributes describing the entity emitting the spans.
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
     ResourceSpans:
       type: object
       properties:
@@ -207,13 +182,16 @@ components:
             $ref: '#/components/schemas/ScopeSpans'
         schemaUrl:
           type: string
-    InstrumentationScope:
+    KeyValue:
       type: object
+      required:
+      - key
+      - value
       properties:
-        name:
+        key:
           type: string
-        version:
-          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     SpanEvent:
       type: object
       properties:
@@ -225,6 +203,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/KeyValue'
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum:
+          - STATUS_CODE_UNSET
+          - STATUS_CODE_OK
+          - STATUS_CODE_ERROR
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
     ExportTraceServiceResponse:
       type: object
       properties:

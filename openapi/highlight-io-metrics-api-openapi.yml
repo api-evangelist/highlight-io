@@ -48,23 +48,13 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    Resource:
+    InstrumentationScope:
       type: object
       properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
+        name:
           type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
+        version:
+          type: string
     AnyValue:
       type: object
       properties:
@@ -85,6 +75,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScopeMetrics'
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    HistogramDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        count:
+          type: string
+        sum:
+          type: number
+        bucketCounts:
+          type: array
+          items:
+            type: string
+        explicitBounds:
+          type: array
+          items:
+            type: number
     NumberDataPoint:
       type: object
       properties:
@@ -100,6 +140,15 @@ components:
           type: number
         asInt:
           type: string
+    ExportMetricsServiceRequest:
+      type: object
+      required:
+      - resourceMetrics
+      properties:
+        resourceMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceMetrics'
     Metric:
       type: object
       required:
@@ -138,22 +187,6 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-    ExportMetricsServiceRequest:
-      type: object
-      required:
-      - resourceMetrics
-      properties:
-        resourceMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceMetrics'
     ScopeMetrics:
       type: object
       properties:
@@ -163,36 +196,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Metric'
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
-    HistogramDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        count:
-          type: string
-        sum:
-          type: number
-        bucketCounts:
-          type: array
-          items:
-            type: string
-        explicitBounds:
-          type: array
-          items:
-            type: number
