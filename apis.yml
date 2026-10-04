@@ -226,6 +226,9 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/highlight-
 access: 3rd-Party
 x-type: company
 common:
+- type: CapabilityMap
+  url: capabilities/highlight-io-capability-edges.yml
+  name: Highlight (highlight.io) Business Capability Map
 - type: Website
   url: https://highlight.io
 - type: AgenticAccess
