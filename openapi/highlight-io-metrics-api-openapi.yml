@@ -48,107 +48,6 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-    AnyValue:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        boolValue:
-          type: boolean
-        intValue:
-          type: string
-        doubleValue:
-          type: number
-    ResourceMetrics:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Resource'
-        scopeMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeMetrics'
-    ExportMetricsServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedDataPoints:
-              type: string
-            errorMessage:
-              type: string
-    Resource:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    HistogramDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        count:
-          type: string
-        sum:
-          type: number
-        bucketCounts:
-          type: array
-          items:
-            type: string
-        explicitBounds:
-          type: array
-          items:
-            type: number
-    NumberDataPoint:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-        startTimeUnixNano:
-          type: string
-        timeUnixNano:
-          type: string
-        asDouble:
-          type: number
-        asInt:
-          type: string
-    ExportMetricsServiceRequest:
-      type: object
-      required:
-      - resourceMetrics
-      properties:
-        resourceMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceMetrics'
     Metric:
       type: object
       required:
@@ -187,6 +86,83 @@ components:
                 $ref: '#/components/schemas/HistogramDataPoint'
             aggregationTemporality:
               type: integer
+    HistogramDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        count:
+          type: string
+        sum:
+          type: number
+        bucketCounts:
+          type: array
+          items:
+            type: string
+        explicitBounds:
+          type: array
+          items:
+            type: number
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    ExportMetricsServiceRequest:
+      type: object
+      required:
+      - resourceMetrics
+      properties:
+        resourceMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceMetrics'
+    AnyValue:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        boolValue:
+          type: boolean
+        intValue:
+          type: string
+        doubleValue:
+          type: number
+    NumberDataPoint:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+        startTimeUnixNano:
+          type: string
+        timeUnixNano:
+          type: string
+        asDouble:
+          type: number
+        asInt:
+          type: string
+    ResourceMetrics:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
+        scopeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeMetrics'
     ScopeMetrics:
       type: object
       properties:
@@ -196,3 +172,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Metric'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    ExportMetricsServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedDataPoints:
+              type: string
+            errorMessage:
+              type: string
+    Resource:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'

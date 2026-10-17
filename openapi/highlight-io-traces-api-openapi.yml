@@ -63,6 +63,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    KeyValue:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
     Span:
       type: object
       required:
@@ -113,6 +123,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SpanLink'
+    ExportTraceServiceResponse:
+      type: object
+      properties:
+        partialSuccess:
+          type: object
+          properties:
+            rejectedSpans:
+              type: string
+            errorMessage:
+              type: string
+    SpanEvent:
+      type: object
+      properties:
+        timeUnixNano:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
     ExportTraceServiceRequest:
       type: object
       description: OpenTelemetry export envelope for trace data.
@@ -142,13 +173,17 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/AnyValue'
-    InstrumentationScope:
+    ErrorResponse:
       type: object
       properties:
-        name:
+        code:
+          type: integer
+        message:
           type: string
-        version:
-          type: string
+        details:
+          type: array
+          items:
+            type: object
     SpanLink:
       type: object
       properties:
@@ -160,6 +195,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/KeyValue'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum:
+          - STATUS_CODE_UNSET
+          - STATUS_CODE_OK
+          - STATUS_CODE_ERROR
     Resource:
       type: object
       description: Resource attributes describing the entity emitting the spans.
@@ -182,59 +235,6 @@ components:
             $ref: '#/components/schemas/ScopeSpans'
         schemaUrl:
           type: string
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
-    SpanEvent:
-      type: object
-      properties:
-        timeUnixNano:
-          type: string
-        name:
-          type: string
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-    Status:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-          enum:
-          - STATUS_CODE_UNSET
-          - STATUS_CODE_OK
-          - STATUS_CODE_ERROR
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
-    ExportTraceServiceResponse:
-      type: object
-      properties:
-        partialSuccess:
-          type: object
-          properties:
-            rejectedSpans:
-              type: string
-            errorMessage:
-              type: string
     ScopeSpans:
       type: object
       properties:

@@ -54,22 +54,25 @@ paths:
           description: Rate limited.
 components:
   schemas:
-    InstrumentationScope:
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-    ExportLogsServiceRequest:
+    KeyValue:
       type: object
       required:
-      - resourceLogs
+      - key
+      - value
       properties:
-        resourceLogs:
+        key:
+          type: string
+        value:
+          $ref: '#/components/schemas/AnyValue'
+    ScopeLogs:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/InstrumentationScope'
+        logRecords:
           type: array
           items:
-            $ref: '#/components/schemas/ResourceLogs'
+            $ref: '#/components/schemas/LogRecord'
     AnyValue:
       type: object
       properties:
@@ -110,35 +113,20 @@ components:
           type: string
         spanId:
           type: string
-    ScopeLogs:
+    ErrorResponse:
       type: object
       properties:
-        scope:
-          $ref: '#/components/schemas/InstrumentationScope'
-        logRecords:
-          type: array
-          items:
-            $ref: '#/components/schemas/LogRecord'
-    Resource:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValue'
-          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
-
-            '
-    KeyValue:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
+        code:
+          type: integer
+        message:
           type: string
-        value:
-          $ref: '#/components/schemas/AnyValue'
+    InstrumentationScope:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
     ExportLogsServiceResponse:
       type: object
       properties:
@@ -149,13 +137,25 @@ components:
               type: string
             errorMessage:
               type: string
-    ErrorResponse:
+    ExportLogsServiceRequest:
+      type: object
+      required:
+      - resourceLogs
+      properties:
+        resourceLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceLogs'
+    Resource:
       type: object
       properties:
-        code:
-          type: integer
-        message:
-          type: string
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          description: 'MUST include `highlight.project_id`. SHOULD include `service.name`, `service.version`, and `deployment.environment`.
+
+            '
     ResourceLogs:
       type: object
       properties:
