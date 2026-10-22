@@ -16,9 +16,28 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: WordPress plugin
+- partner_name: Vercel (own)
+  partner: vercel
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://vercel.com/marketplace/highlight
+  mirror_of: vercel/integrations/vercel-integration-edges.yml
+  apps:
+  - Highlight
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Vercel Marketplace
+  partner_tier: connectable-account
 generated: '2026-10-15'
 method: searched
 checked:
 - wordpress/integrations/wordpress-integration-edges.yml
+- vercel/integrations/vercel-integration-edges.yml
 source:
 - wordpress/integrations/wordpress-integration-edges.yml
