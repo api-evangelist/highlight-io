@@ -1,4 +1,4 @@
-# Highlight (highlight.io) (highlight-io)
+# Highlight (highlight.io)
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,266 +66,191 @@
 
 Highlight (highlight.io) is the open-source, full-stack monitoring platform — session replay, error monitoring, logging, distributed tracing, and metrics in a single tool. Built on OpenTelemetry, rrweb, and ClickHouse, Highlight correlates server-side spans and logs back to the originating browser session so engineers can move from a customer report to the exact line of code in one click. Available as a hosted SaaS on three commercial tiers (Free / Pay-as-you-go / Business / Enterprise) and as a fully open-source self-hosted deployment (Dev / Hobby / Enterprise) under Apache 2.0.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/highlight-io/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/highlight-io/refs/heads/main/apis.yml)
+**Areas:** Observability · Session Replay · Error Monitoring · APM · Logging · Tracing · OpenTelemetry · Open Source · Frontend Monitoring · Full Stack Monitoring
 
-## Scope
+## Highlight (highlight.io) on APIs.io
 
-- **Position:** Consuming
-- **Access:** 3rd-Party
+Everything profiled for Highlight (highlight.io) is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/highlight-io/](https://apis.io/providers/highlight-io/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
-- Observability
-- Session Replay
-- Error Monitoring
-- APM
-- Logging
-- Tracing
-- OpenTelemetry
-- Open Source
-- Frontend Monitoring
-- Full Stack Monitoring
+- [Highlight Private GraphQL API](https://apis.io/apis/highlight-io/highlight-private-graphql-api/) — Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list, search, and manage workspaces, projects, sessions,…
+- [Highlight Webhooks API](https://apis.io/apis/highlight-io/highlight-webhooks-api/) — Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL with alert metadata (name, type, count),…
+- [Highlight Self-Hosted Deployment](https://apis.io/apis/highlight-io/highlight-self-hosted-api/) — Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose), Hobby (single-host Docker for low-volume…
+- [Highlight (highlight.io) Logs API](https://apis.io/apis/highlight-io/highlight-io-logs-api/) — OpenTelemetry log ingestion
+- [Highlight (highlight.io) Metrics API](https://apis.io/apis/highlight-io/highlight-io-metrics-api/) — OpenTelemetry metric ingestion (beta)
+- [Highlight (highlight.io) Sessions API](https://apis.io/apis/highlight-io/highlight-io-sessions-api/) — Browser session ingestion mutations
+- [Highlight (highlight.io) Traces API](https://apis.io/apis/highlight-io/highlight-io-traces-api/) — OpenTelemetry trace ingestion
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-25T00:00:00.000Z
-- **Modified:** 2026-05-25
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Arazzo workflows (10)
 
-### Highlight OTLP Traces API
+Multi-step workflows that chain operations into a business task.
 
-Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for distributed traces. Accepts standard OTLP `ResourceSpans` payloads at `https://otel.highlight.io/v1/traces`. Spans carry the `highlight.project_id` resource attribute and optional `highlight.session_id` / `highlight.trace_id` so server-side spans correlate with frontend session replay.
+- [Highlight Backend Error Report](https://apis.io/arazzos/highlight-io/highlight-io-backend-error-report-workflow/)
+- [Highlight Backend Session Payload](https://apis.io/arazzos/highlight-io/highlight-io-backend-session-payload-workflow/)
+- [Highlight Browser Session Lifecycle](https://apis.io/arazzos/highlight-io/highlight-io-browser-session-lifecycle-workflow/)
+- [Highlight Correlated Backend Telemetry Export](https://apis.io/arazzos/highlight-io/highlight-io-correlated-backend-telemetry-export-workflow/)
+- [Highlight Frontend Error Capture](https://apis.io/arazzos/highlight-io/highlight-io-frontend-error-capture-workflow/)
+- [Highlight Fullstack Error Correlation](https://apis.io/arazzos/highlight-io/highlight-io-fullstack-error-correlation-workflow/)
+- [Highlight Fullstack Session Correlation](https://apis.io/arazzos/highlight-io/highlight-io-fullstack-session-correlation-workflow/)
+- [Highlight Logs and Metrics Batch](https://apis.io/arazzos/highlight-io/highlight-io-logs-and-metrics-batch-workflow/)
+- [Highlight Session Feedback Capture](https://apis.io/arazzos/highlight-io/highlight-io-session-feedback-capture-workflow/)
+- [Highlight Session Track Event](https://apis.io/arazzos/highlight-io/highlight-io-session-track-event-workflow/)
 
-- **Human URL:** [https://www.highlight.io/docs/general/product-features/tracing](https://www.highlight.io/docs/general/product-features/tracing)
+#### GraphQL (1)
 
-#### Tags
+GraphQL schemas.
 
-- Observability
-- OpenTelemetry
-- Traces
-- Tracing
-- Distributed Tracing
+- [Highlight (highlight.io) GraphQL API](https://apis.io/graphqls/highlight-io/highlight-io-graphql/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://www.highlight.io/docs/general/product-features/tracing)
-- [OpenAPI](openapi/highlight-otlp-traces-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/highlight-otlp-traces-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-traces-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [JSON Schema](json-schema/highlight-trace-schema.json) — [JSON Schema](https://json-schema.org/specification)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-### Highlight OTLP Logs API
+- [Highlight Io Agentic Access](https://apis.io/agentic-access/highlight-io/highlight-io-agentic-access/)
 
-Native OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for structured logs at `https://otel.highlight.io/v1/logs`. Supports severity levels, trace/span correlation, and arbitrary attributes. Highlight stores logs in ClickHouse for sub-second full-text search and pattern detection.
+#### JSON Schema (3)
 
-- **Human URL:** [https://www.highlight.io/docs/general/product-features/logging](https://www.highlight.io/docs/general/product-features/logging)
+The data models the API reads and writes.
 
-#### Tags
+- [Highlight Log Record (OTLP)](https://apis.io/schemas/highlight-io/highlight-log/)
+- [Highlight Session](https://apis.io/schemas/highlight-io/highlight-session/)
+- [Highlight Trace (OTLP)](https://apis.io/schemas/highlight-io/highlight-trace/)
 
-- Observability
-- OpenTelemetry
-- Logs
-- Logging
+#### JSON-LD (1)
 
-#### Properties
+Linked-data contexts for the provider's vocabulary.
 
-- [Documentation](https://www.highlight.io/docs/general/product-features/logging)
-- [OpenAPI](openapi/highlight-otlp-logs-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/highlight-otlp-logs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-logs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [JSON Schema](json-schema/highlight-log-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [Highlight Io Context](https://apis.io/jsonld/highlight-io/highlight-io-context/)
 
-### Highlight OTLP Metrics API
+#### Vocabulary (1)
 
-Beta OpenTelemetry Protocol (OTLP) HTTP/JSON ingestion endpoint for metrics at `https://otel.highlight.io/v1/metrics`. Accepts gauges, sums, histograms, and exponential histograms and drives Highlight dashboards, alerts, and the metrics SQL editor.
+The provider's domain terms, defined.
 
-- **Human URL:** [https://www.highlight.io/docs/general/product-features/metrics](https://www.highlight.io/docs/general/product-features/metrics)
+- [Highlight Io Vocabulary](https://apis.io/vocabularies/highlight-io/highlight-io-vocabulary/)
 
-#### Tags
+#### Collections (14)
 
-- Observability
-- OpenTelemetry
-- Metrics
-- Beta
+Postman and Open Collection request collections.
 
-#### Properties
+- [Highlight OTLP Logs API](https://apis.io/collections/highlight-io/open-highlight-io-logs-api/)
+- [Highlight OTLP Logs Metrics API](https://apis.io/collections/highlight-io/open-highlight-io-metrics-api/)
+- [Highlight OTLP Logs Sessions API](https://apis.io/collections/highlight-io/open-highlight-io-sessions-api/)
+- [Highlight OTLP Logs Traces API](https://apis.io/collections/highlight-io/open-highlight-io-traces-api/)
+- [Highlight OTLP Logs Webhooks API](https://apis.io/collections/highlight-io/open-highlight-io-webhooks-api/)
+- [Highlight OTLP Logs API](https://apis.io/collections/highlight-io/open-highlight-otlp-logs-api/)
+- [Highlight OTLP Metrics API](https://apis.io/collections/highlight-io/open-highlight-otlp-metrics-api/)
+- [Highlight OTLP Traces API](https://apis.io/collections/highlight-io/open-highlight-otlp-traces-api/)
+- [Highlight Session Ingestion API](https://apis.io/collections/highlight-io/open-highlight-session-ingestion-api/)
+- [Highlight Webhooks API](https://apis.io/collections/highlight-io/open-highlight-webhooks-api/)
+- [Highlight OTLP Logs API](https://apis.io/collections/highlight-io/postman-highlight-otlp-logs-api/)
+- [Highlight OTLP Metrics API](https://apis.io/collections/highlight-io/postman-highlight-otlp-metrics-api/)
+- [Highlight OTLP Traces API](https://apis.io/collections/highlight-io/postman-highlight-otlp-traces-api/)
+- [Highlight Session Ingestion API](https://apis.io/collections/highlight-io/postman-highlight-session-ingestion-api/)
 
-- [Documentation](https://www.highlight.io/docs/general/product-features/metrics)
-- [OpenAPI](openapi/highlight-otlp-metrics-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/highlight-otlp-metrics-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-metrics-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Governance rules (2)
 
-### Highlight Session Ingestion API
+Spectral rulesets for the provider's contracts.
 
-GraphQL-over-HTTP session replay ingestion endpoint at `https://pub.highlight.io` used by the `highlight.run` browser SDK to upload rrweb DOM snapshots, console/network recording, custom events, identify payloads, and error reports. Public, project-id authenticated, no user secrets required.
+- [Highlight (highlight.io) — jsonschema rules](https://apis.io/rules/highlight-io/highlight-io-jsonschema-spectral-rules/)
+- [Highlight (highlight.io) API Rules](https://apis.io/rules/highlight-io/highlight-io-rules/)
 
-- **Human URL:** [https://www.highlight.io/docs/general/product-features/session-replay](https://www.highlight.io/docs/general/product-features/session-replay)
+#### Security (1)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
-- Observability
-- Session Replay
-- Ingestion
-- GraphQL
+- [Highlight Io Domain Security](https://apis.io/security/highlight-io/highlight-io-domain-security/)
 
-#### Properties
+#### Plans and pricing (1)
 
-- [Documentation](https://www.highlight.io/docs/general/product-features/session-replay)
-- [OpenAPI](openapi/highlight-session-ingestion-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/highlight-session-ingestion-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-session-ingestion-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [JSON Schema](json-schema/highlight-session-schema.json) — [JSON Schema](https://json-schema.org/specification)
+Published plans, tiers and prices.
 
-### Highlight Private GraphQL API
+- [Highlight Io Plans Pricing](https://apis.io/plans/highlight-io/highlight-io-plans-pricing/)
 
-Internal GraphQL API that powers the Highlight dashboard at `https://pri.highlight.io`. Used to list, search, and manage workspaces, projects, sessions, errors, logs, traces, dashboards, alerts, and integrations. Authenticated via dashboard session cookie or workspace admin API token; the schema is open-source under `backend/private-graph/graph` but is not a stable public contract.
+#### Rate limits (1)
 
-- **Human URL:** [https://github.com/highlight/highlight/tree/main/backend/private-graph](https://github.com/highlight/highlight/tree/main/backend/private-graph)
+Published request limits.
 
-#### Tags
+- [Highlight Io Rate Limits](https://apis.io/rate-limits/highlight-io/highlight-io-rate-limits/)
 
-- Observability
-- GraphQL
-- Management
-- Internal
+#### FinOps (1)
 
-#### Properties
+What the API costs to run, by operation.
 
-- [Documentation](https://github.com/highlight/highlight/tree/main/backend/private-graph)
-- [Documentation](https://www.highlight.io/docs/general/product-features/general-features/api)
-- [Postman Collection](collections/highlight-otlp-logs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-logs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-metrics-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-metrics-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-traces-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-traces-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-session-ingestion-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-session-ingestion-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-webhooks-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-webhooks-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Highlight Io Finops](https://apis.io/finops/highlight-io/highlight-io-finops/)
 
-### Highlight Webhooks API
+## Where to find this API
 
-Outbound webhooks delivered when Highlight alerts fire. POST JSON payload to a customer-supplied URL with alert metadata (name, type, count), error/session/log/metric context, project routing, and action URLs to resolve, ignore, or snooze. Supports Error, Session, User, Log, Trace, and Metric monitor alerts.
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- **Human URL:** [https://www.highlight.io/docs/general/product-features/general-features/webhooks](https://www.highlight.io/docs/general/product-features/general-features/webhooks)
-
-#### Tags
-
-- Observability
-- Webhooks
-- Alerts
-- Notifications
-
-#### Properties
-
-- [Documentation](https://www.highlight.io/docs/general/product-features/general-features/webhooks)
-- [Async Events](openapi/highlight-webhooks-api-openapi.yml)
-- [Postman Collection](collections/highlight-otlp-logs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-logs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-metrics-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-metrics-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-traces-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-traces-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-session-ingestion-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-session-ingestion-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-webhooks-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-webhooks-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Highlight Self-Hosted Deployment
-
-Self-hosted deployment of the open-source Highlight stack. Three tiers — Dev (single-host docker-compose), Hobby (single-host Docker for low-volume production), and Enterprise (Kubernetes with horizontal scaling, ClickHouse cluster, and managed retention). All ingestion endpoints (OTLP traces, logs, metrics; pub.highlight.io session ingestion; pri.highlight.io GraphQL) are reproduced in-cluster.
-
-- **Human URL:** [https://www.highlight.io/docs/general/company/open-source/self-host-hobby](https://www.highlight.io/docs/general/company/open-source/self-host-hobby)
-
-#### Tags
-
-- Observability
-- Self-Hosted
-- Open Source
-- Docker
-- Kubernetes
-
-#### Properties
-
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/self-host-hobby)
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/self-host-enterprise)
-- [Source Code](https://github.com/highlight/highlight/tree/main/docker)
-- [Postman Collection](collections/highlight-otlp-logs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-logs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-metrics-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-metrics-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-otlp-traces-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-otlp-traces-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-session-ingestion-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-session-ingestion-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/highlight-webhooks-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/highlight-webhooks-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Arazzo Workflows](arazzo/) — [Arazzo Specification](https://spec.openapis.org/arazzo/latest.html)
-- [Portal](https://www.highlight.io)
+- [Website](https://highlight.io)
 - [Documentation](https://www.highlight.io/docs)
-- [Getting Started](https://www.highlight.io/docs/general/welcome)
-- [Sign Up](https://app.highlight.io/sign_up)
-- [Portal](https://app.highlight.io)
+- [Getting started](https://www.highlight.io/docs/general/welcome)
 - [Pricing](https://www.highlight.io/pricing)
-- [Case Studies](https://www.highlight.io/customers)
-- [Blog](https://www.highlight.io/blog)
 - [Changelog](https://www.highlight.io/changelog)
-- [Status Page](https://status.highlight.io)
-- [Forum](https://www.highlight.io/community)
-- [Forum](https://discord.gg/yxaXEAqgwN)
-- [Source Code](https://github.com/highlight/highlight)
-- [GitHub Organization](https://github.com/highlight)
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/hosted-vs-self-hosted)
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/self-host-hobby)
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/self-host-enterprise)
-- [Compliance](https://www.highlight.io/docs/general/company/security-and-privacy/compliance)
+- [Blog](https://www.highlight.io/blog)
 - [Security](https://www.highlight.io/docs/general/company/security-and-privacy/security)
-- [Terms of Service](https://www.highlight.io/terms)
-- [Privacy Policy](https://www.highlight.io/privacy)
-- [Roadmap](https://www.highlight.io/docs/general/company/general/roadmap)
-- [Documentation](https://www.highlight.io/docs/general/company/open-source/contributing)
-- [SDK](https://www.highlight.io/docs/sdk/highlightrun)
-- [SDK](https://www.npmjs.com/package/highlight.run)
-- [SDK](https://www.npmjs.com/package/@highlight-run/node)
-- [SDK](https://www.npmjs.com/package/@highlight-run/next)
-- [SDK](https://www.npmjs.com/package/@highlight-run/nest)
-- [SDK](https://www.npmjs.com/package/@highlight-run/react)
-- [SDK](https://www.npmjs.com/package/@highlight-run/remix)
-- [SDK](https://www.npmjs.com/package/@highlight-run/sveltekit)
-- [SDK](https://www.npmjs.com/package/@highlight-run/cloudflare)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-go)
-- [SDK](https://pypi.org/project/highlight-io/)
-- [SDK](https://rubygems.org/gems/highlight_io)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-rust)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-elixir)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-java)
-- [SDK](https://github.com/highlight/highlight-php)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-dotnet)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-react-native)
-- [SDK](https://github.com/highlight/highlight/tree/main/sdk/highlight-electron)
-- [OpenAPI](openapi/highlight-otlp-traces-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [OpenAPI](openapi/highlight-otlp-logs-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [OpenAPI](openapi/highlight-otlp-metrics-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [OpenAPI](openapi/highlight-session-ingestion-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [OpenAPI](openapi/highlight-webhooks-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Plans](plans/highlight-io-plans-pricing.yml)
-- [Rate Limits](rate-limits/highlight-io-rate-limits.yml)
-- [Fin Ops](finops/highlight-io-finops.yml)
-- [JSON-LD](json-ld/highlight-io-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [Vocabulary](vocabulary/highlight-io-vocabulary.yml)
-- [Spectral Rules](rules/highlight-io-rules.yml)
-- [LinkedIn](https://www.linkedin.com/company/highlightio)
-- [Twitter](https://twitter.com/highlightio)
-- [YouTube](https://www.youtube.com/@highlightio)
-- [Features](undefined)
+- [Compliance](https://www.highlight.io/docs/general/company/security-and-privacy/compliance)
+- [Terms of service](https://www.highlight.io/terms)
+- [Privacy policy](https://www.highlight.io/privacy)
+- [GitHub](https://github.com/highlight)
+- [Status](https://status.highlight.io)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** info@apievangelist.com
-**URL:** https://apievangelist.com
+**Kin Score 56.9** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 62.5 |
+| Contract quality | 56.2 |
+| Contract governance | 27.3 |
+| Operational transparency | 60.5 |
+| Developer ergonomics | 56.0 |
+| Access clarity | 68.4 |
+
+**Agent readiness 21.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 23.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/highlight-io/](https://apis.io/providers/highlight-io/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Highlight (highlight.io): the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/highlight-io/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
